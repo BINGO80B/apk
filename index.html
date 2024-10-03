@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lotería</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="c">
+<div class="d">
+<h1>Lotería</h1>
+<div class="t">
+<button class="b a" data-tab="buy">Comprar</button>
+<button class="b" data-tab="draw">Sorteo</button>
+</div>
+<div class="n" id="buyTab">
+<button id="cB" class="e">💳 Créditos: $<span id="cA">0</span></button>
+<div class="g"></div>
+<div class="o">
+<select id="tP">
+<option value="500">$500</option>
+<option value="1000">$1.000</option>
+<option value="1500">$1.500</option>
+<option value="2000">$2.000</option>
+</select>
+<button id="bB" disabled>Comprar</button>
+</div>
+<div id="tL"></div>
+</div>
+<div class="n x" id="drawTab">
+<button id="sB">Iniciar Sorteo</button>
+<div id="dR" class="x">
+<div>Balota: <span id="cB">0</span> / 20</div>
+<div id="dN"></div>
+<div id="tD"></div>
+<div id="wI" class="x"></div>
+</div>
+</div>
+</div>
+</div>
+<div id="cD" class="l">
+<div class="m">
+<h2>Gestionar Créditos</h2>
+<input type="password" id="pI" placeholder="Contraseña">
+<input type="number" id="aI" placeholder="Monto">
+<select id="aS">
+<option value="add">Agregar</option>
+<option value="withdraw">Retirar</option>
+</select>
+<button id="fB">Confirmar</button>
+<button id="clB">Cerrar</button>
+</div>
+</div>
+<script src="script.js"></script>
+</body>
+</html>
