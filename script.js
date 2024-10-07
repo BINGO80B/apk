@@ -79,15 +79,16 @@ function loginPlayer() {
 }
 
 function logoutPlayer() {
+    const username = currentPlayer ? currentPlayer.username : '';
     currentPlayer = null;
     credits = 0;
     selectedNumbers = [];
     tickets = [];
     document.getElementById('gameScreen').classList.add('x');
     document.getElementById('authScreen').classList.remove('x');
-    document.getElementById('loginUsername').value = '';
+    document.getElementById('loginUsername').value = username;
     document.getElementById('loginPassword').value = '';
-    showRegisterForm();
+    showLoginForm();
 }
 
 function updatePlayerInfo() {
@@ -412,10 +413,10 @@ function renderTicketsInDraw(){
 function calculateWinnings(){
     tickets.forEach(ticket=>{
         if(ticket.matches===3){
-            
             winnings+=ticket.price*50;
         }
     });
+    
     credits+=winnings;
     updateCreditsDisplay();
     saveCredits();
