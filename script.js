@@ -161,12 +161,8 @@ function showCreditDialog(){
     if (currentPlayer && currentPlayer.isAdmin) {
         showAdminPanel();
     } else {
-        showContactMessage();
+        document.getElementById("cD").classList.add("visible");
     }
-}
-
-function showContactMessage() {
-    alert("PARA CARGAR o RETIRAR CREDITOS COMUNICATE AL WHATSAPP +573247159521");
 }
 
 function hideCreditDialog(){
@@ -222,6 +218,10 @@ function adminAddCredits(playerId) {
         if (players[username].id === playerId) {
             players[username].credits += amount;
             savePlayer(players[username]);
+            if (currentPlayer && currentPlayer.id === playerId) {
+                credits = players[username].credits;
+                updateCreditsDisplay();
+            }
             alert(`Se agregaron ${amount} créditos al jugador ${players[username].username}`);
             showAdminPanel();
             return;
@@ -244,6 +244,10 @@ function adminRemoveCredits(playerId) {
             }
             players[username].credits -= amount;
             savePlayer(players[username]);
+            if (currentPlayer && currentPlayer.id === playerId) {
+                credits = players[username].credits;
+                updateCreditsDisplay();
+            }
             alert(`Se retiraron ${amount} créditos al jugador ${players[username].username}`);
             showAdminPanel();
             return;
@@ -274,6 +278,10 @@ function handleCredits(){
         if(action==="add"){
             credits+=amount;
         }else{
+            if(credits < amount){
+                alert("No tienes suficientes créditos para retirar");
+                return;
+            }
             credits=Math.max(0,credits-amount);
         }
         updateCreditsDisplay();
@@ -282,6 +290,7 @@ function handleCredits(){
         document.getElementById("pI").value="";
         document.getElementById("aI").value="";
         document.getElementById("aS").value="add";
+        alert(`Se han ${action === "add" ? "agregado" : "retirado"} ${amount} créditos a tu cuenta.`);
     }else{
         alert("Contraseña incorrecta");
     }
@@ -397,6 +406,7 @@ function renderDrawnNumbers(){
 function updateTicketMatches(){
     tickets.forEach(ticket=>{
         ticket.matches=ticket.numbers.filter(num=>
+            
             drawnNumbers.slice(0,currentDrawnIndex).includes(num)
         ).length;
     });
@@ -416,7 +426,6 @@ function calculateWinnings(){
             winnings+=ticket.price*50;
         }
     });
-    
     credits+=winnings;
     updateCreditsDisplay();
     saveCredits();
