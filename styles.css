@@ -1,7 +1,7 @@
 body{font-family:sans-serif;margin:0;padding:0;display:flex;justify-content:center;align-items:center;min-height:100vh;background:#1f2937;color:#fff}
 .c{width:100%;max-width:500px;padding:20px}
-.d{background:#374151;border-radius:8px;overflow:hidden;box-shadow:0 4px 6px rgba(0,0,0,.1);padding:20px}
-h1,h2{margin:0;text-align:center;color:#fbbf24}
+.d{background:#e6f7e6;border-radius:8px;overflow:hidden;box-shadow:0 4px 6px rgba(0,0,0,.1);padding:20px}
+h1,h2{margin:0 0 20px;text-align:center;color:#1f2937}
 .t{display:flex;margin:20px 0}
 .b,.e,select,button{padding:10px;border:none;border-radius:4px;background:#4b5563;color:#fff;cursor:pointer}
 .b{flex:1}
@@ -21,8 +21,18 @@ button:disabled{opacity:.5;cursor:not-allowed}
 #dR{text-align:center}
 #dN{display:flex;flex-wrap:wrap;justify-content:center;margin:20px 0}
 #dN div{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:5px;font-weight:700;color:#fff}
-#wI{font-size:20px;font-weight:700;margin-top:20px;color:#fbbf24}
+#wI{font-size:20px;font-weight:700;margin-top:20px;color:#1f2937}
 .l{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;justify-content:center;align-items:center}
 .l.visible{display:flex}
-.m{background:#374151;padding:20px;border-radius:8px;width:300px}
+.m{background:#e6f7e6;padding:20px;border-radius:8px;width:300px}
 .m input,.m select,.m button{width:100%;margin-bottom:10px}
+#authScreen input,#authScreen button{width:100%;margin-bottom:10px;padding:10px;border:none;border-radius:4px}
+#authScreen input{background:#4b5563;color:#fff}
+#playerInfo{margin-bottom:20px;font-weight:bold;color:#1f2937}
+#logoutButton{margin-top:20px;width:100%}
+.switch-link{text-align:center;margin-top:10px;color:#1f2937;text-decoration:underline;cursor:pointer}
+.admin-panel{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#e6f7e6;padding:20px;border-radius:8px;max-width:80%;max-height:80%;overflow-y:auto;z-index:1000}
+.admin-panel h2{color:#1f2937;margin-bottom:20px}
+.admin-panel div{margin-bottom:10px;display:flex;align-items:center;justify-content:space-between}
+.admin-panel input{width:60px;margin-right:5px}
+.admin-panel button{padding:5px 10px;margin-left:5px}

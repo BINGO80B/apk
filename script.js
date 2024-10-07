@@ -1,16 +1,103 @@
+let currentPlayer = null;
 let credits=0,selectedNumbers=[],tickets=[],currentPrice=500,isDrawing=false,drawnNumbers=[],currentDrawnIndex=0,winnings=0;
 const colors=["#ef4444","#3b82f6","#10b981","#f59e0b","#8b5cf6","#ec4899","#6366f1","#14b8a6","#f97316","#06b6d4"];
 
+function initializeAdminUser() {
+    const adminUser = {
+        id: "99999",
+        username: "ADMINISTRADOR",
+        password: "c27041279",
+        credits: 0,
+        isAdmin: true
+    };
+    savePlayer(adminUser);
+}
+
+function generatePlayerId() {
+    return Math.floor(10000 + Math.random() * 90000).toString();
+}
+
+function savePlayer(player) {
+    let players = JSON.parse(localStorage.getItem('players')) || {};
+    players[player.username] = player;
+    localStorage.setItem('players', JSON.stringify(players));
+}
+
+function getPlayer(username) {
+    let players = JSON.parse(localStorage.getItem('players')) || {};
+    return players[username];
+}
+
+function getAllPlayers() {
+    return JSON.parse(localStorage.getItem('players')) || {};
+}
+
+function registerPlayer() {
+    const username = document.getElementById('registerUsername').value;
+    const password = document.getElementById('registerPassword').value;
+    if (username && password) {
+        if (getPlayer(username)) {
+            alert('El nombre de usuario ya existe');
+        } else {
+            const player = {
+                id: generatePlayerId(),
+                username: username,
+                password: password,
+                credits: 0
+            };
+            savePlayer(player);
+            alert('Registro exitoso. Por favor, inicia sesión.');
+            showLoginForm();
+        }
+    } else {
+        alert('Por favor, ingresa un nombre de usuario y contraseña');
+    }
+}
+
+function loginPlayer() {
+    const username = document.getElementById('loginUsername').value;
+    const password = document.getElementById('loginPassword').value;
+    const player = getPlayer(username);
+    if (player && player.password === password) {
+        currentPlayer = player;
+        credits = player.credits;
+        document.getElementById('authScreen').classList.add('x');
+        document.getElementById('gameScreen').classList.remove('x');
+        updatePlayerInfo();
+        updateCreditsDisplay();
+    } else {
+        alert('Nombre de usuario o contraseña incorrectos');
+    }
+}
+
+function logoutPlayer() {
+    currentPlayer = null;
+    credits = 0;
+    selectedNumbers = [];
+    tickets = [];
+    document.getElementById('gameScreen').classList.add('x');
+    document.getElementById('authScreen').classList.remove('x');
+    document.getElementById('loginUsername').value = '';
+    document.getElementById('loginPassword').value = '';
+    showRegisterForm();
+}
+
+function updatePlayerInfo() {
+    document.getElementById('playerInfo').textContent = `Jugador: ${currentPlayer.username} (ID: ${currentPlayer.id})`;
+}
+
 function loadCredits(){
-    const savedCredits=localStorage.getItem("lotteryCredits");
-    if(savedCredits){
-        credits=parseInt(savedCredits,10);
+    if (currentPlayer) {
+        credits = currentPlayer.credits;
         updateCreditsDisplay();
     }
 }
 
 function saveCredits(){
-    localStorage.setItem("lotteryCredits",credits.toString());
+    if (currentPlayer) {
+        currentPlayer.credits = credits;
+        savePlayer(currentPlayer);
+    }
 }
 
 function generateNumberGrid(){
@@ -35,6 +122,21 @@ function setupEventListeners(){
     document.getElementById("tP").addEventListener("change",e=>{
         currentPrice=parseInt(e.target.value,10);
     });
+    document.getElementById("registerButton").addEventListener("click", registerPlayer);
+    document.getElementById("loginButton").addEventListener("click", loginPlayer);
+    document.getElementById("logoutButton").addEventListener("click", logoutPlayer);
+    document.getElementById("switchToLogin").addEventListener("click", showLoginForm);
+    document.getElementById("switchToRegister").addEventListener("click", showRegisterForm);
+}
+
+function showLoginForm() {
+    document.getElementById("registerForm").classList.add("x");
+    document.getElementById("loginForm").classList.remove("x");
+}
+
+function showRegisterForm() {
+    document.getElementById("loginForm").classList.add("x");
+    document.getElementById("registerForm").classList.remove("x");
 }
 
 function changeTab(tabName){
@@ -43,15 +145,116 @@ function changeTab(tabName){
     document.querySelector(`.b[data-tab="${tabName}"]`).classList.add("a");
     document.getElementById(`${tabName}Tab`).classList.remove("x");
     if(tabName==="buy"&&isDrawing) resetDraw();
-    updateCreditsDisplay(); // Actualizar la visualización de créditos al cambiar de pestaña
+    updateCreditsDisplay();
 }
 
 function showCreditDialog(){
-    document.getElementById("cD").classList.add("visible");
+    if (currentPlayer && currentPlayer.isAdmin) {
+        showAdminPanel();
+    } else {
+        showContactMessage();
+    }
+}
+
+function showContactMessage() {
+    alert("PARA CARGAR o RETIRAR CREDITOS COMUNICATE AL WHATSAPP +573247159521");
 }
 
 function hideCreditDialog(){
     document.getElementById("cD").classList.remove("visible");
+}
+
+function showAdminPanel() {
+    const adminPanel = document.createElement('div');
+    adminPanel.id = 'adminPanel';
+    adminPanel.classList.add('admin-panel');
+
+    const players = getAllPlayers();
+    let playerList = '<h2>Gestión de Jugadores</h2>';
+    for (let username in players) {
+        if (username !== 'ADMINISTRADOR') {
+            const player = players[username];
+            playerList += `
+                <div>
+                    <span>${player.username} (ID: ${player.id}) - Créditos: ${player.credits}</span>
+                    <input type="number" id="credit-${player.id}" placeholder="Monto">
+                    <button onclick="adminAddCredits('${player.id}')">Agregar</button>
+                    <button onclick="adminRemoveCredits('${player.id}')">Retirar</button>
+                    <button onclick="adminDeletePlayer('${player.id}')">Eliminar</button>
+                </div>
+            `;
+        }
+    }
+
+    adminPanel.innerHTML = playerList;
+    document.body.appendChild(adminPanel);
+
+    const closeButton = document.createElement('button');
+    closeButton.textContent = 'Cerrar';
+    closeButton.onclick = closeAdminPanel;
+    adminPanel.appendChild(closeButton);
+}
+
+function closeAdminPanel() {
+    const adminPanel = document.getElementById('adminPanel');
+    if (adminPanel) {
+        adminPanel.remove();
+    }
+}
+
+function adminAddCredits(playerId) {
+    const amount = parseInt(document.getElementById(`credit-${playerId}`).value);
+    if (isNaN(amount) || amount <= 0) {
+        alert('Por favor, ingrese un monto válido');
+        return;
+    }
+    const players = getAllPlayers();
+    for (let username in players) {
+        if (players[username].id === playerId) {
+            players[username].credits += amount;
+            savePlayer(players[username]);
+            alert(`Se agregaron ${amount} créditos al jugador ${players[username].username}`);
+            showAdminPanel();
+            return;
+        }
+    }
+}
+
+function adminRemoveCredits(playerId) {
+    const amount = parseInt(document.getElementById(`credit-${playerId}`).value);
+    if (isNaN(amount) || amount <= 0) {
+        alert('Por favor, ingrese un monto válido');
+        return;
+    }
+    const players = getAllPlayers();
+    for (let username in players) {
+        if (players[username].id === playerId) {
+            if (players[username].credits < amount) {
+                alert('El jugador no tiene suficientes créditos');
+                return;
+            }
+            players[username].credits -= amount;
+            savePlayer(players[username]);
+            alert(`Se retiraron ${amount} créditos al jugador ${players[username].username}`);
+            showAdminPanel();
+            return;
+        }
+    }
+}
+
+function adminDeletePlayer(playerId) {
+    if (confirm('¿Está seguro de que desea eliminar este jugador?')) {
+        const players = getAllPlayers();
+        for (let username in players) {
+            if (players[username].id === playerId) {
+                delete players[username];
+                localStorage.setItem('players', JSON.stringify(players));
+                alert(`El jugador ${username} ha sido eliminado`);
+                showAdminPanel();
+                return;
+            }
+        }
+    }
 }
 
 function handleCredits(){
@@ -209,7 +412,7 @@ function calculateWinnings(){
     saveCredits();
     document.getElementById("wI").classList.remove("x");
     document.getElementById("wI").textContent=winnings>0
-        ?`¡Felicidades! Ganaste $${winnings}`
+        ?`¡Felicidades! Ganaste  $${winnings}`
         :"No hubo ganadores esta vez";
 }
 
@@ -223,11 +426,11 @@ function resetDraw(){
     document.getElementById("dR").classList.add("x");
     document.getElementById("wI").classList.add("x");
     renderTickets();
-    updateCreditsDisplay(); // Actualizar la visualización de créditos al resetear el sorteo
+    updateCreditsDisplay();
 }
 
 document.addEventListener("DOMContentLoaded",()=>{
-    loadCredits();
+    initializeAdminUser();
     generateNumberGrid();
     setupEventListeners();
 });

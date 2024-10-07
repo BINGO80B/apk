@@ -8,8 +8,26 @@
 </head>
 <body>
 <div class="c">
-<div class="d">
+<div id="authScreen" class="d">
+<h1>Bienvenido a la Lotería</h1>
+<div id="registerForm">
+<h2>Registrarse</h2>
+<input type="text" id="registerUsername" placeholder="Nombre de usuario">
+<input type="password" id="registerPassword" placeholder="Contraseña">
+<button id="registerButton">Registrarse</button>
+<p id="switchToLogin" class="switch-link">¿Ya tienes una cuenta? Inicia sesión</p>
+</div>
+<div id="loginForm" class="x">
+<h2>Iniciar Sesión</h2>
+<input type="text" id="loginUsername" placeholder="Nombre de usuario">
+<input type="password" id="loginPassword" placeholder="Contraseña">
+<button id="loginButton">Iniciar Sesión</button>
+<p id="switchToRegister" class="switch-link">¿No tienes una cuenta? Regístrate</p>
+</div>
+</div>
+<div id="gameScreen" class="d x">
 <h1>Lotería</h1>
+<div id="playerInfo"></div>
 <div class="t">
 <button class="b a" data-tab="buy">Comprar</button>
 <button class="b" data-tab="draw">Sorteo</button>
@@ -37,6 +55,7 @@
 <div id="wI" class="x"></div>
 </div>
 </div>
+<button id="logoutButton">Cerrar Sesión</button>
 </div>
 </div>
 <div id="cD" class="l">
