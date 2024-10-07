@@ -46,12 +46,20 @@ function registerPlayer() {
                 credits: 0
             };
             savePlayer(player);
-            alert('Registro exitoso. Por favor, inicia sesión.');
-            showLoginForm();
+            loginPlayerAfterRegistration(player);
         }
     } else {
         alert('Por favor, ingresa un nombre de usuario y contraseña');
     }
+}
+
+function loginPlayerAfterRegistration(player) {
+    currentPlayer = player;
+    credits = player.credits;
+    document.getElementById('authScreen').classList.add('x');
+    document.getElementById('gameScreen').classList.remove('x');
+    updatePlayerInfo();
+    updateCreditsDisplay();
 }
 
 function loginPlayer() {
@@ -404,6 +412,7 @@ function renderTicketsInDraw(){
 function calculateWinnings(){
     tickets.forEach(ticket=>{
         if(ticket.matches===3){
+            
             winnings+=ticket.price*50;
         }
     });
