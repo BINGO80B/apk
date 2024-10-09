@@ -25,7 +25,8 @@ button:disabled{opacity:.5;cursor:not-allowed}
 .l{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;justify-content:center;align-items:center}
 .l.visible{display:flex}
 .m{background:#e6f7e6;padding:20px;border-radius:8px;width:300px}
-.m input,.m select,.m button{width:100%;margin-bottom:10px}
+.m input,.m select,.m button{width:100%;margin-bottom:10px;padding:10px;border:none;border-radius:4px}
+.m input,.m select{background:#4b5563;color:#fff}
 #authScreen input,#authScreen button{width:100%;margin-bottom:10px;padding:10px;border:none;border-radius:4px}
 #authScreen input{background:#4b5563;color:#fff}
 #playerInfo{margin-bottom:20px;font-weight:bold;color:#1f2937}
@@ -36,3 +37,12 @@ button:disabled{opacity:.5;cursor:not-allowed}
 .admin-panel div{margin-bottom:10px;display:flex;align-items:center;justify-content:space-between}
 .admin-panel input{width:60px;margin-right:5px}
 .admin-panel button{padding:5px 10px;margin-left:5px}
+#loadCreditsBtn, #withdrawCreditsBtn {background:#3b82f6;color:#fff;margin-bottom:10px}
+#confirmLoadCredits, #confirmWithdraw {background:#10b981}
+#clB {background:#ef4444}
+#loadCreditsForm, #withdrawCreditsForm {margin-top:10px}
+#loadPassword, #loadCode, #withdrawAmount {background:#4b5563;color:#fff}
+#receiptScreen .m {background:#fff;color:#1f2937}
+#receiptContent {background:#f3f4f6;padding:10px;border-radius:4px;margin-bottom:10px}
+#receiptContent p {margin:5px 0}
+#closeReceipt {background:#3b82f6}

@@ -18,6 +18,7 @@
         <div id="gameScreen" class="d x">
             <h1>Juego de Lotería</h1>
             <div id="playerInfo"></div>
+            <button id="logoutButton">Cerrar Sesión</button>
             <div class="t">
                 <button class="b a" data-tab="buy">Comprar</button>
                 <button class="b" data-tab="draw">Sorteo</button>
@@ -47,9 +48,27 @@
     </div>
     <div id="cD" class="l">
         <div class="m">
-            <input type="text" id="codeInput" placeholder="Ingresa el código">
-            <button id="fB">Canjear Código</button>
+            <h2>Gestión de Créditos</h2>
+            <button id="loadCreditsBtn">Cargar Créditos</button>
+            <button id="withdrawCreditsBtn">Retirar Créditos</button>
+            <div id="loadCreditsForm" class="x">
+                <input type="password" id="loadPassword" placeholder="Contraseña">
+                <input type="number" id="loadAmount" placeholder="Monto a cargar" min="1">
+                <input type="text" id="loadCode" placeholder="Código de carga">
+                <button id="confirmLoadCredits">Confirmar Carga</button>
+            </div>
+            <div id="withdrawCreditsForm" class="x">
+                <input type="number" id="withdrawAmount" placeholder="Monto a retirar" min="1">
+                <button id="confirmWithdraw">Confirmar Retiro</button>
+            </div>
             <button id="clB">Cerrar</button>
+        </div>
+    </div>
+    <div id="receiptScreen" class="l">
+        <div class="m">
+            <h2>Recibo de Retiro</h2>
+            <div id="receiptContent"></div>
+            <button id="closeReceipt">Cerrar Recibo</button>
         </div>
     </div>
     <script src="script.js"></script>

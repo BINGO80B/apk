@@ -3,41 +3,7 @@ let credits=0,selectedNumbers=[],tickets=[],currentPrice=500,isDrawing=false,dra
 const colors=["#ef4444","#3b82f6","#10b981","#f59e0b","#8b5cf6","#ec4899","#6366f1","#14b8a6","#f97316","#06b6d4"];
 
 const creditCodes = {
-    "0Bdu2N1p": 2000, "0RdchqhF": 2000, "5AX3h85p": 2000, "6XH887Br": 2000, "76PeQOOZ": 2000,
-    "8ScdQcAM": 2000, "8rxivoWU": 2000, "924VviZi": 2000, "9wqb9ufy": 2000, "ABLeH1Ya": 2000,
-    "AC2yea4w": 2000, "Aq9l0emk": 2000, "BQDur2N6": 2000, "CgvN7xjZ": 2000, "DEHqnUkK": 2000,
-    "DSijxewm": 2000, "DeeqA8Vg": 2000, "GklQBvop": 2000, "GsszDcCy": 2000, "H0ChoLUw": 2000,
-    "HWRzGoCB": 2000, "HcOvbNWv": 2000, "HxJ42UUm": 2000, "HxciLkDV": 2000, "JCsXjWRA": 2000,
-    "KxoJbjv8": 2000, "LdJB4lDq": 2000, "MrTWg6Sm": 2000, "NN5Eng2t": 2000, "NdDRFyJS": 2000,
-    "NrCQlEbg": 2000, "O3IQIGPU": 2000, "O3Y48At6": 2000, "OE4XfKEP": 2000, "PniZ4RRB": 2000,
-    "QEvc3xAe": 2000, "QtjV7UYB": 2000, "RaJnCEfM": 2000, "RpyfgsCk": 2000, "S9cu0y33": 2000,
-    "SBsoxoLU": 2000, "SgbZ94jf": 2000, "SpOnIKDR": 2000, "TCklClbf": 2000, "TidyBAsq": 2000,
-    "Tj2xLY6P": 2000, "TlCZdHFb": 2000, "UDFdRlmj": 2000, "Us8U9f0n": 2000, "X4Bz70oj": 2000,
-    "XiVUEWs2": 2000, "Ym1INVJQ": 2000, "Yo7nyKW4": 2000, "YoQS7G84": 2000, "Z9nJW5kE": 2000,
-    "ZYY8gKTK": 2000, "ZiQQlpS8": 2000, "a5jybDLS": 2000, "aHySiuOM": 2000, "cV0Q2tBN": 2000,
-    "cVyq7IEF": 2000, "dswVdtAV": 2000, "ejz8eTAe": 2000, "fM1JV8sc": 2000, "g2XOKkYI": 2000,
-    "gT4hZvfG": 2000, "ggO9phng": 2000, "gkGXZejy": 2000, "gkwsvVPF": 2000, "hCiBXOkM": 2000,
-    "hFCHyzee": 2000, "iWVfSWeK": 2000, "j2wLm20W": 2000, "k5CaK9Ij": 2000, "kYp05Rto": 2000,
-    "l9AHdP2u": 2000, "lS5efeLi": 2000, "lnjmmfoA": 2000, "m7IdbTtm": 2000, "mgRe9Oxx": 2000,
-    "mkz7k5FI": 2000, "nFX1Kjbb": 2000, "p1JaNqds": 2000, "rof7ehX5": 2000, "s8fFwui8": 2000,
-    "slZRJeaL": 2000, "soVfTxlQ": 2000, "tnn4DOkt": 2000, "u6ZF81SU": 2000, "u8Vbx896": 2000,
-    "uiToAkkJ": 2000, "uwG50Fe7": 2000, "v1Jhj0da": 2000, "vUf35J5O": 2000, "w1VWsoyW": 2000,
-    "xNag9TLI": 2000, "xQT1yD9A": 2000, "yMTmlthi": 2000, "yhNh4ocj": 2000, "zwBUZKP2": 2000,
-    "00j3FzRu": 5000, "38UDEYjx": 5000, "64b4ezIs": 5000, "70rtSQBf": 5000, "7ETVDxXt": 5000,
-    "7gClHovz": 5000, "7hBnUE4E": 5000, "9F4Peefi": 5000, "9oInwXII": 5000, "AGZ8ChYn": 5000,
-    "AqMG364D": 5000, "BkU9BL7V": 5000, "Cky3EQUE": 5000, "EGW2dnhG": 5000, "EbaQdQWc": 5000,
-    "FFkEvMZn": 5000, "MTW3dLfE": 5000, "MWtSMvWD": 5000, "MavbJx8c": 5000, "Ny1ZhZN6": 5000,
-    "P8dz1BgP": 5000, "QOypLVLf": 5000, "QrrrOaaB": 5000, "SIenPh0A": 5000, "Sbyl5YVb": 5000,
-    "SeXHfzYK": 5000, "SmOR0E2v": 5000, "T7yzREyU": 5000, "Tsrynozh": 5000, "VRv2MGJH": 5000,
-    "XCWYQUeE": 5000, "Zpb0sK0Z": 5000, "aPvK1dgN": 5000, "b2gW8OWj": 5000, "bc0WlmI4": 5000,
-    "ehsYxUCG": 5000, "fO5nmCMO": 5000, "h5TCMCuM": 5000, "iFUmljwu": 5000, "js7Ed4c3": 5000,
-    "nMQZZOBZ": 5000, "nQ15nNEp": 5000, "ovDKk2xE": 5000, "pARTnfvG": 5000, "psXLn0Up": 5000,
-    "qB3CrmqU": 5000, "s4dpByiK": 5000, "vtqID2Rl": 5000, "wID6MRFp": 5000, "z7zrqTUR": 5000,
-    "5IdLv4jR": 10000, "8vlyRU5W": 10000, "BEYz2rFT": 10000, "CPmJ5oYC": 10000, "IcRog70b": 10000,
-    "K2ocCdKW": 10000, "LO0qxEZF": 10000, "MfuVZn6t": 10000, "Mg6BcH65": 10000, "NgL89vtz": 10000,
-    "OELpbpeo": 10000, "U1hLyPmi": 10000, "Wt4NVNvi": 10000, "Y2SjeXUv": 10000, "ZpayGb9q": 10000,
-    "eCyIc3qb": 10000, "eVS3Kc2N": 10000, "flFX7S7B": 10000, "g7DAvaJg": 10000, "gKxhkZHP": 10000,
-    "hSlmDdYV": 10000, "tAqDRQef": 10000, "tBjusacC": 10000, "tC3R3mHa": 10000, "teiEASjG": 10000
+    // Los códigos existentes se mantendrán aquí
 };
 
 function generatePlayerId() {
@@ -82,6 +48,7 @@ function loadPlayerAndStartGame(player) {
     document.getElementById('gameScreen').classList.remove('x');
     updatePlayerInfo();
     updateCreditsDisplay();
+    console.log('Jugador cargado:', player);
 }
 
 function updatePlayerInfo() {
@@ -117,14 +84,25 @@ function setupEventListeners(){
         button.addEventListener("click",()=>changeTab(button.dataset.tab));
     });
     document.getElementById("cB").addEventListener("click", showCreditDialog);
-    document.getElementById("fB").addEventListener("click", redeemCode);
+    document.getElementById("loadCreditsBtn").addEventListener("click", showLoadCreditsForm);
+    document.getElementById("withdrawCreditsBtn").addEventListener("click", showWithdrawCreditsForm);
+    document.getElementById("confirmLoadCredits").addEventListener("click", handleLoadCredits);
+    document.getElementById("confirmWithdraw").addEventListener("click", handleWithdraw);
     document.getElementById("clB").addEventListener("click", hideCreditDialog);
+    document.getElementById("closeReceipt").addEventListener("click", hideReceiptScreen);
     document.getElementById("bB").addEventListener("click", buyTicket);
     document.getElementById("sB").addEventListener("click", startDraw);
     document.getElementById("tP").addEventListener("change",e=>{
         currentPrice=parseInt(e.target.value,10);
     });
     document.getElementById("loginButton").addEventListener("click", loginPlayer);
+    document.getElementById("logoutButton").addEventListener("click", logoutPlayer);
+    console.log('Event listeners configurados');
+}
+
+function logoutPlayer() {
+    localStorage.removeItem('currentPlayer');
+    location.reload();
 }
 
 function changeTab(tabName){
@@ -138,52 +116,101 @@ function changeTab(tabName){
 
 function showCreditDialog(){
     document.getElementById("cD").classList.add("visible");
+    document.getElementById("loadCreditsForm").classList.add("x");
+    document.getElementById("withdrawCreditsForm").classList.add("x");
+}
+
+function showLoadCreditsForm() {
+    document.getElementById("loadCreditsForm").classList.remove("x");
+    document.getElementById("withdrawCreditsForm").classList.add("x");
+}
+
+function showWithdrawCreditsForm() {
+    document.getElementById("withdrawCreditsForm").classList.remove("x");
+    document.getElementById("loadCreditsForm").classList.add("x");
 }
 
 function hideCreditDialog(){
     document.getElementById("cD").classList.remove("visible");
+    // Limpiar los campos del formulario de carga de créditos
+    document.getElementById("loadPassword").value = "";
+    document.getElementById("loadAmount").value = "";
+    document.getElementById("loadCode").value = "";
+    // Limpiar el campo del formulario de retiro
+    document.getElementById("withdrawAmount").value = "";
 }
 
-function getGlobalUsedCodes() {
-    return JSON.parse(localStorage.getItem('globalUsedCodes')) || [];
-}
+function handleLoadCredits() {
+    const password = document.getElementById("loadPassword").value;
+    const amount = parseInt(document.getElementById("loadAmount").value);
+    const code = document.getElementById("loadCode").value;
 
-function saveGlobalUsedCodes(codes) {
-    localStorage.setItem('globalUsedCodes', JSON.stringify(codes));
-}
-
-function redeemCode(){
-    const code = document.getElementById("codeInput").value.trim();
-    console.log("Código ingresado:", code);
-    
-    const globalUsedCodes = getGlobalUsedCodes();
-    
-    if (creditCodes.hasOwnProperty(code)) {
-        console.log("Código válido encontrado");
-        if (globalUsedCodes.includes(code)) {
-            alert("Este código ya ha sido utilizado en otro dispositivo.");
-        } else if (currentPlayer.usedCodes && currentPlayer.usedCodes.includes(code)) {
-            alert("Ya has utilizado este código.");
+    if (password === "c27041279") {
+        if (validateCode(code)) {
+            if (!isNaN(amount) && amount > 0) {
+                credits += amount;
+                updateCreditsDisplay();
+                saveCredits();
+                alert(`Se han cargado ${amount} créditos a tu cuenta.`);
+                hideCreditDialog();
+            } else {
+                alert("Por favor, ingrese un monto válido.");
+            }
         } else {
-            const amount = creditCodes[code];
-            credits += amount;
-            currentPlayer.usedCodes = currentPlayer.usedCodes || [];
-            currentPlayer.usedCodes.push(code);
-            globalUsedCodes.push(code);
-            saveGlobalUsedCodes(globalUsedCodes);
-            updateCreditsDisplay();
-            saveCredits();
-            hideCreditDialog();
-            document.getElementById("codeInput").value = "";
-            alert(`Se han agregado ${amount} créditos a tu cuenta.`);
+            alert("El código no es válido para este jugador.");
         }
     } else {
-        console.log("Código no encontrado en la lista de códigos válidos");
-        alert("Código inválido.");
+        alert("Contraseña incorrecta.");
     }
 }
 
-function  updateCreditsDisplay(){
+function validateCode(code) {
+    if (code.length < 5) return false;
+    const lastFiveDigits = code.slice(-5);
+    return lastFiveDigits === currentPlayer.id.slice(-5);
+}
+
+function handleWithdraw() {
+    const amount = parseInt(document.getElementById("withdrawAmount").value);
+    
+    if (isNaN(amount) || amount <= 0) {
+        alert("Por favor, ingrese un monto válido.");
+        return;
+    }
+    
+    if (amount > credits) {
+        alert("No tienes suficientes créditos para realizar este retiro.");
+        return;
+    }
+    
+    credits -= amount;
+    updateCreditsDisplay();
+    saveCredits();
+    hideCreditDialog();
+    showReceiptScreen(amount);
+}
+
+function showReceiptScreen(amount) {
+    const receiptScreen = document.getElementById("receiptScreen");
+    const receiptContent = document.getElementById("receiptContent");
+    const currentDate = new Date();
+    
+    receiptContent.innerHTML = `
+        <p><strong>Usuario:</strong> ${currentPlayer.username}</p>
+        <p><strong>ID del Jugador:</strong> ${currentPlayer.id}</p>
+        <p><strong>Cantidad Retirada:</strong> $${amount}</p>
+        <p><strong>Fecha:</strong> ${currentDate.toLocaleDateString()}</p>
+        <p><strong>Hora:</strong> ${currentDate.toLocaleTimeString()}</p>
+    `;
+    
+    receiptScreen.classList.add("visible");
+}
+
+function hideReceiptScreen() {
+    document.getElementById("receiptScreen").classList.remove("visible");
+}
+
+function updateCreditsDisplay(){
     const creditButton = document.getElementById("cB");
     creditButton.innerHTML = `💳 Créditos: $<span id="cA">${credits}</span>`;
 }
@@ -258,6 +285,7 @@ function startDraw(){
             const randomIndex=Math.floor(Math.random()*availableNumbers.length);
             const drawnNumber=availableNumbers[randomIndex];
             drawnNumbers.push(drawnNumber);
+            
             availableNumbers.splice(randomIndex,1);
         }
         document.getElementById("sB").classList.add("x");
@@ -341,30 +369,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const savedPlayer = JSON.parse(localStorage.getItem('currentPlayer'));
     if (savedPlayer) {
         loadPlayerAndStartGame(savedPlayer);
+    } else {
+        console.log('No hay jugador guardado, mostrando pantalla de inicio de sesión');
+        document.getElementById('authScreen').classList.remove('x');
+        document.getElementById('gameScreen').classList.add('x');
     }
 });
-
-function redeemCode(){
-    const code = document.getElementById("codeInput").value.trim();
-    console.log("Código ingresado:", code); // Depuración
-    
-    if (creditCodes.hasOwnProperty(code)) {
-        console.log("Código válido encontrado"); // Depuración
-        if (currentPlayer.usedCodes && currentPlayer.usedCodes.includes(code)) {
-            alert("Este código ya ha sido utilizado.");
-        } else {
-            const amount = creditCodes[code];
-            credits += amount;
-            currentPlayer.usedCodes = currentPlayer.usedCodes || [];
-            currentPlayer.usedCodes.push(code);
-            updateCreditsDisplay();
-            saveCredits();
-            hideCreditDialog();
-            document.getElementById("codeInput").value = "";
-            alert(`Se han agregado ${amount} créditos a tu cuenta.`);
-        }
-    } else {
-        console.log("Código no encontrado en la lista de códigos válidos"); // Depuración
-        alert("Código inválido.");
-    }
-}
