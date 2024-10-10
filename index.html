@@ -49,13 +49,17 @@
     <div id="cD" class="l">
         <div class="m">
             <h2>Gestión de Créditos</h2>
-            <button id="loadCreditsBtn">Cargar Créditos</button>
+            <button id="loadCreditsBtn">Cargar Créditos con Contraseña</button>
+            <button id="loadCreditsCodeBtn">Cargar Créditos con Código</button>
             <button id="withdrawCreditsBtn">Retirar Créditos</button>
             <div id="loadCreditsForm" class="x">
                 <input type="password" id="loadPassword" placeholder="Contraseña">
                 <input type="number" id="loadAmount" placeholder="Monto a cargar" min="1">
-                <input type="text" id="loadCode" placeholder="Código de carga">
                 <button id="confirmLoadCredits">Confirmar Carga</button>
+            </div>
+            <div id="loadCreditsCodeForm" class="x">
+                <input type="text" id="loadCode" placeholder="Código de carga (formato: XXXXX00000)" maxlength="10">
+                <button id="confirmLoadCreditsCode">Confirmar Carga con Código</button>
             </div>
             <div id="withdrawCreditsForm" class="x">
                 <input type="number" id="withdrawAmount" placeholder="Monto a retirar" min="1">

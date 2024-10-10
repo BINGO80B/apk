@@ -3,7 +3,26 @@ let credits=0,selectedNumbers=[],tickets=[],currentPrice=500,isDrawing=false,dra
 const colors=["#ef4444","#3b82f6","#10b981","#f59e0b","#8b5cf6","#ec4899","#6366f1","#14b8a6","#f97316","#06b6d4"];
 
 const creditCodes = {
-    // Los códigos existentes se mantendrán aquí
+    "bingo00000": 1000,
+    "bingo00001": 2000,
+    "bingo00002": 3000,
+    "bingo00003": 4000,
+    "bingo00004": 5000,
+    "bingo00005": 6000,
+    "bingo00006": 7000,
+    "bingo00007": 8000,
+    "bingo00008": 9000,
+    "bingo00009": 10000,
+    "bingo00010": 11000,
+    "bingo00011": 12000,
+    "bingo00012": 13000,
+    "bingo00013": 14000,
+    "bingo00014": 15000,
+    "bingo00015": 16000,
+    "bingo00016": 17000,
+    "bingo00017": 18000,
+    "bingo00018": 19000,
+    "bingo00019": 20000
 };
 
 function generatePlayerId() {
@@ -85,8 +104,10 @@ function setupEventListeners(){
     });
     document.getElementById("cB").addEventListener("click", showCreditDialog);
     document.getElementById("loadCreditsBtn").addEventListener("click", showLoadCreditsForm);
+    document.getElementById("loadCreditsCodeBtn").addEventListener("click", showLoadCreditsCodeForm);
     document.getElementById("withdrawCreditsBtn").addEventListener("click", showWithdrawCreditsForm);
     document.getElementById("confirmLoadCredits").addEventListener("click", handleLoadCredits);
+    document.getElementById("confirmLoadCreditsCode").addEventListener("click", handleLoadCreditsCode);
     document.getElementById("confirmWithdraw").addEventListener("click", handleWithdraw);
     document.getElementById("clB").addEventListener("click", hideCreditDialog);
     document.getElementById("closeReceipt").addEventListener("click", hideReceiptScreen);
@@ -117,17 +138,26 @@ function changeTab(tabName){
 function showCreditDialog(){
     document.getElementById("cD").classList.add("visible");
     document.getElementById("loadCreditsForm").classList.add("x");
+    document.getElementById("loadCreditsCodeForm").classList.add("x");
     document.getElementById("withdrawCreditsForm").classList.add("x");
 }
 
 function showLoadCreditsForm() {
     document.getElementById("loadCreditsForm").classList.remove("x");
+    document.getElementById("loadCreditsCodeForm").classList.add("x");
+    document.getElementById("withdrawCreditsForm").classList.add("x");
+}
+
+function showLoadCreditsCodeForm() {
+    document.getElementById("loadCreditsCodeForm").classList.remove("x");
+    document.getElementById("loadCreditsForm").classList.add("x");
     document.getElementById("withdrawCreditsForm").classList.add("x");
 }
 
 function showWithdrawCreditsForm() {
     document.getElementById("withdrawCreditsForm").classList.remove("x");
     document.getElementById("loadCreditsForm").classList.add("x");
+    document.getElementById("loadCreditsCodeForm").classList.add("x");
 }
 
 function hideCreditDialog(){
@@ -143,31 +173,54 @@ function hideCreditDialog(){
 function handleLoadCredits() {
     const password = document.getElementById("loadPassword").value;
     const amount = parseInt(document.getElementById("loadAmount").value);
-    const code = document.getElementById("loadCode").value;
 
     if (password === "c27041279") {
-        if (validateCode(code)) {
-            if (!isNaN(amount) && amount > 0) {
-                credits += amount;
-                updateCreditsDisplay();
-                saveCredits();
-                alert(`Se han cargado ${amount} créditos a tu cuenta.`);
-                hideCreditDialog();
-            } else {
-                alert("Por favor, ingrese un monto válido.");
-            }
+        if (!isNaN(amount) && amount > 0) {
+            credits += amount;
+            updateCreditsDisplay();
+            saveCredits();
+            alert(`Se han cargado ${amount} créditos a tu cuenta.`);
+            hideCreditDialog();
         } else {
-            alert("El código no es válido para este jugador.");
+            alert("Por favor, ingrese un monto válido.");
         }
     } else {
         alert("Contraseña incorrecta.");
     }
 }
 
+function handleLoadCreditsCode() {
+    const code = document.getElementById("loadCode").value;
+
+    if (validateCode(code)) {
+        if (creditCodes.hasOwnProperty(code) && !currentPlayer.usedCodes.includes(code)) {
+            const amount = creditCodes[code];
+            credits += amount;
+            currentPlayer.usedCodes.push(code);
+            updateCreditsDisplay();
+            saveCredits();
+            alert(`Se han cargado ${amount} créditos a tu cuenta.`);
+            hideCreditDialog();
+        } else {
+            alert("Código inválido o ya utilizado.");
+        }
+    } else {
+        alert("Formato de código inválido o no coincide con tu ID de jugador.");
+    }
+}
+
 function validateCode(code) {
-    if (code.length < 5) return false;
-    const lastFiveDigits = code.slice(-5);
-    return lastFiveDigits === currentPlayer.id.slice(-5);
+    // Verificar que el código tenga el formato correcto (5 letras seguidas de 5 números)
+    const codeRegex = /^[a-zA-Z]{5}\d{5}$/;
+    if (!codeRegex.test(code)) {
+        return false;
+    }
+
+    // Verificar que los últimos 5 dígitos del código coincidan con los últimos 5 dígitos del ID del jugador
+    const codeNumbers = code.slice(-5);
+    const playerIdNumbers = currentPlayer.id.slice(-5);
+
+    return codeNumbers === playerIdNumbers;
 }
 
 function handleWithdraw() {
@@ -207,7 +260,11 @@ function showReceiptScreen(amount) {
 }
 
 function hideReceiptScreen() {
-    document.getElementById("receiptScreen").classList.remove("visible");
+    alert("Recuerde que para validar este recibo debe hacer una captura de pantalla al recibo y enviarlo al WhatsApp +573247159521");
+    const confirmClose = confirm("¿Desea cerrar el recibo?");
+    if (confirmClose) {
+        document.getElementById("receiptScreen").classList.remove("visible");
+    }
 }
 
 function updateCreditsDisplay(){
@@ -285,7 +342,6 @@ function startDraw(){
             const randomIndex=Math.floor(Math.random()*availableNumbers.length);
             const drawnNumber=availableNumbers[randomIndex];
             drawnNumbers.push(drawnNumber);
-            
             availableNumbers.splice(randomIndex,1);
         }
         document.getElementById("sB").classList.add("x");
@@ -329,6 +385,7 @@ function updateTicketMatches(){
 function renderTicketsInDraw(){
     const ticketsInDraw=document.getElementById("tD");
     ticketsInDraw.innerHTML="";
+    
     tickets.sort((a,b)=>b.matches-a.matches).forEach(ticket=>{
         ticketsInDraw.appendChild(createTicketElement(ticket,true));
     });
