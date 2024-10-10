@@ -4,7 +4,7 @@ const colors=["#ef4444","#3b82f6","#10b981","#f59e0b","#8b5cf6","#ec4899","#6366
 
 const creditCodes = {
     "bingo33191": 2000,
-    "bingo00001": 2000,
+    "bingo26500": 2000,
     "bingo00002": 2000,
     "bingo00003": 2000,
     "bingo00004": 2000,
