@@ -1,48 +1,366 @@
-body{font-family:sans-serif;margin:0;padding:0;display:flex;justify-content:center;align-items:center;min-height:100vh;background:#1f2937;color:#fff}
-.c{width:100%;max-width:500px;padding:20px}
-.d{background:#e6f7e6;border-radius:8px;overflow:hidden;box-shadow:0 4px 6px rgba(0,0,0,.1);padding:20px}
-h1,h2{margin:0 0 20px;text-align:center;color:#1f2937}
-.t{display:flex;margin:20px 0}
-.b,.e,select,button{padding:10px;border:none;border-radius:4px;background:#4b5563;color:#fff;cursor:pointer}
-.b{flex:1}
-.b.a,.g button.s{background:#fbbf24;color:#1f2937}
-.n.x,.x{display:none}
-.e{width:100%;background:#fbbf24;color:#1f2937;font-weight:700;margin-bottom:20px}
-.g{display:grid;grid-template-columns:repeat(8,1fr);gap:5px;margin-bottom:20px}
-.g button{width:100%;aspect-ratio:1}
-.o{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
-button:disabled{opacity:.5;cursor:not-allowed}
-.k{background:#3b82f6;border-radius:4px;padding:8px;margin-bottom:8px;font-size:12px}
-.ticket-header{display:flex;justify-content:space-between;margin-bottom:4px;font-weight:bold}
-.ticket-numbers{display:flex;justify-content:center;flex-wrap:wrap}
-.ticket-numbers span{display:inline-block;width:18px;height:18px;background:#fff;color:#3b82f6;border-radius:50%;text-align:center;line-height:18px;margin:2px;font-weight:700}
-.ticket-numbers span.m{background:#10b981;color:#fff}
-.ticket-matches{text-align:center;margin-top:4px;font-weight:bold}
-#dR{text-align:center}
-#dN{display:flex;flex-wrap:wrap;justify-content:center;margin:20px 0}
-#dN div{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:5px;font-weight:700;color:#fff}
-#wI{font-size:20px;font-weight:700;margin-top:20px;color:#1f2937}
-.l{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;justify-content:center;align-items:center}
-.l.visible{display:flex}
-.m{background:#e6f7e6;padding:20px;border-radius:8px;width:300px}
-.m input,.m select,.m button{width:100%;margin-bottom:10px;padding:10px;border:none;border-radius:4px}
-.m input,.m select{background:#4b5563;color:#fff}
-#authScreen input,#authScreen button{width:100%;margin-bottom:10px;padding:10px;border:none;border-radius:4px}
-#authScreen input{background:#4b5563;color:#fff}
-#playerInfo{margin-bottom:20px;font-weight:bold;color:#1f2937}
-#logoutButton{margin-top:20px;width:100%}
-.switch-link{text-align:center;margin-top:10px;color:#1f2937;text-decoration:underline;cursor:pointer}
-.admin-panel{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#e6f7e6;padding:20px;border-radius:8px;max-width:80%;max-height:80%;overflow-y:auto;z-index:1000}
-.admin-panel h2{color:#1f2937;margin-bottom:20px}
-.admin-panel div{margin-bottom:10px;display:flex;align-items:center;justify-content:space-between}
-.admin-panel input{width:60px;margin-right:5px}
-.admin-panel button{padding:5px 10px;margin-left:5px}
-#loadCreditsBtn, #withdrawCreditsBtn {background:#3b82f6;color:#fff;margin-bottom:10px}
-#confirmLoadCredits, #confirmWithdraw {background:#10b981}
-#clB {background:#ef4444}
-#loadCreditsForm, #withdrawCreditsForm {margin-top:10px}
-#loadPassword, #loadCode, #withdrawAmount {background:#4b5563;color:#fff}
-#receiptScreen .m {background:#fff;color:#1f2937}
-#receiptContent {background:#f3f4f6;padding:10px;border-radius:4px;margin-bottom:10px}
-#receiptContent p {margin:5px 0}
-#closeReceipt {background:#3b82f6}
+body {
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-image: url('https://www.lavanguardia.com/andro4all/hero/2022/08/Las-mejores-aplicaciones-para-jugar-al-bingo.jpg?width=1200&aspect_ratio=16:9'); /* Replace with your actual image URL */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    color: #fff;
+}
+
+.c {
+    width: 100%;
+    max-width: 500px;
+    padding: 20px;
+}
+
+.d {
+    background: rgba(230, 247, 230, 0.5); /* Más transparente */
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    backdrop-filter: blur(5px); /* Añade un efecto de desenfoque */
+    -webkit-backdrop-filter: blur(5px); /* Para compatibilidad con Safari */
+    color: #1f2937; /* Color de texto más oscuro para mejor contraste */
+}
+
+h1, h2 {
+    margin: 0 0 20px;
+    text-align: center;
+    color: #1f2937;
+}
+
+.t {
+    display: flex;
+    margin: 20px 0;
+}
+
+.b, .e, select, button {
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    background: #4b5563;
+    color: #fff;
+    cursor: pointer;
+}
+
+.b {
+    flex: 1;
+}
+
+.b.a, .g button.s {
+    background: #fbbf24;
+    color: #1f2937;
+}
+
+.n.x, .x {
+    display: none;
+}
+
+.e {
+    width: 100%;
+    background: #fbbf24;
+    color: #1f2937;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.g {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 5px;
+    margin-bottom: 20px;
+}
+
+.g button {
+    width: 100%;
+    aspect-ratio: 1;
+}
+
+.o {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.k {
+    background: #3b82f6;
+    border-radius: 4px;
+    padding: 8px;
+    margin-bottom: 8px;
+    font-size: 12px;
+}
+
+.ticket-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+    font-weight: bold;
+}
+
+.ticket-numbers {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.ticket-numbers span {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    background: #fff;
+    color: #3b82f6;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 18px;
+    margin: 2px;
+    font-weight: 700;
+}
+
+.ticket-numbers span.m {
+    background: #10b981;
+    color: #fff;
+}
+
+.ticket-matches {
+    text-align: center;
+    margin-top: 4px;
+    font-weight: bold;
+}
+
+#dR {
+    text-align: center;
+}
+
+#dN {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+#dN div {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 5px;
+    font-weight: 700;
+    color: #fff;
+}
+
+#wI {
+    font-size: 20px;
+    font-weight: 700;
+    margin-top: 20px;
+    color: #1f2937;
+}
+
+.l {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+.l.visible {
+    display: flex;
+}
+
+.m {
+    background: #e6f7e6;
+    padding: 20px;
+    border-radius: 8px;
+    width: 300px;
+}
+
+.m input, .m select, .m button {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+}
+
+.m input, .m select {
+    background: #4b5563;
+    color: #fff;
+}
+
+#authScreen input, #authScreen button {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+}
+
+#authScreen input {
+    background: #4b5563;
+    color: #fff;
+}
+
+#playerInfo {
+    margin-bottom: 20px;
+    font-weight: bold;
+    color: #1f2937;
+}
+
+#logoutButton {
+    margin-top: 20px;
+    width: 100%;
+}
+
+.switch-link {
+    text-align: center;
+    margin-top: 10px;
+    color: #1f2937;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.admin-panel {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #e6f7e6;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 80%;
+    max-height: 80%;
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+.admin-panel h2 {
+    color: #1f2937;
+    margin-bottom: 20px;
+}
+
+.admin-panel div {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.admin-panel input {
+    width: 60px;
+    margin-right: 5px;
+}
+
+.admin-panel button {
+    padding: 5px 10px;
+    margin-left: 5px;
+}
+
+#loadCreditsBtn, #withdrawCreditsBtn {
+    background: #3b82f6;
+    color: #fff;
+    margin-bottom: 10px;
+}
+
+#confirmLoadCredits, #confirmWithdraw {
+    background: #10b981;
+}
+
+#clB {
+    background: #ef4444;
+}
+
+#loadCreditsForm, #withdrawCreditsForm {
+    margin-top: 10px;
+}
+
+#loadPassword, #loadCode, #withdrawAmount {
+    background: #4b5563;
+    color: #fff;
+}
+
+#receiptScreen .m {
+    background: #fff;
+    color: #1f2937;
+}
+
+#receiptContent {
+    background: #f3f4f6;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+#receiptContent p {
+    margin: 5px 0;
+}
+
+#closeReceipt {
+    background: #3b82f6;
+}
+
+/* Styles for the new ticket design */
+.ticket {
+    background-color: rgba(248, 249, 250, 0.7);
+    border: 1px solid #dee2e6;
+    border-radius: .25rem;
+    padding: .5rem;
+    cursor: pointer;
+    margin-bottom: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.ticket.selected {
+    background-color: rgba(204, 229, 255, 0.7);
+}
+
+.ticket table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.ticket td {
+    border: 1px solid #dee2e6;
+    text-align: center;
+    padding: 5px;
+    font-size: 14px;
+    width: 11.11%; /* 100% / 9 columns */
+    height: 30px;
+}
+
+.ticket td:empty {
+    background-color: rgba(240, 240, 240, 0.3);
+}
+
+.in-draw .ticket-id {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.in-draw td.matched {
+    background-color: rgba(144, 238, 144, 0.7);
+    border-radius: 50%;
+}
+
+@media (max-width: 600px) {
+    .ticket td {
+        font-size: 12px;
+        padding: 3px;
+        height: 25px;
+    }
+}
