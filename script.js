@@ -3,26 +3,26 @@ let credits=0,selectedNumbers=[],tickets=[],currentPrice=500,isDrawing=false,dra
 const colors=["#ef4444","#3b82f6","#10b981","#f59e0b","#8b5cf6","#ec4899","#6366f1","#14b8a6","#f97316","#06b6d4"];
 
 const creditCodes = {
-    "bingo33191": 2000,
-    "bingo26500": 2000,
-    "bingo15685": 2000,
-    "bingo00003": 2000,
-    "bingo00004": 2000,
-    "bingo00005": 2000,
-    "bingo00006": 2000,
-    "bingo00007": 2000,
-    "bingo00008": 2000,
-    "bingo00009": 2000,
-    "bingo00010": 2000,
-    "bingo00011": 2000,
-    "bingo00012": 2000,
-    "bingo00013": 2000,
-    "bingo00014": 2000,
-    "bingo00015": 2000,
-    "bingo00016": 2000,
-    "bingo00017": 2000,
-    "bingo00018": 2000,
-    "bingo00019": 2000
+    "ktnnj33191": 2000,
+    "SIfrO26500": 2000,
+    "selnX15685": 2000,
+    "lgpDg00003": 2000,
+    "UDjXH00004": 2000,
+    "qZcfA00005": 2000,
+    "Jccgl00006": 2000,
+    "LJlAM00007": 2000,
+    "qUUou00008": 2000,
+    "dAKpb00009": 2000,
+    "AnLED00010": 3000,
+    "XbIDP00011": 3000,
+    "qSskb00012": 3000,
+    "vxAkO00013": 3000,
+    "PDDAk00014": 3000,
+    "bORei00015": 5000,
+    "Pblml00016": 5000,
+    "kZMuR00017": 5000,
+    "euHbZ00018": 5000,
+    "XDbGI00019": 5000
 };
 
 function generatePlayerId() {
