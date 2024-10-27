@@ -1,29 +1,31 @@
 let currentPlayer = null;
-let credits=0,selectedNumbers=[],tickets=[],currentPrice=500,isDrawing=false,drawnNumbers=[],currentDrawnIndex=0,winnings=0;
-const colors=["#ef4444","#3b82f6","#10b981","#f59e0b","#8b5cf6","#ec4899","#6366f1","#14b8a6","#f97316","#06b6d4"];
+let credits = 0, selectedNumbers = [], tickets = [], currentPrice = 500, isInDraw = false, drawnNumbers = [], currentNumberIndex = 0, winnings = 0;
+const colors = ["#ef4444", "#3b82f6", "#10b981", "#f59e0b", "#8b5cf6", "#ec4899", "#6366f1", "#14b8a6", "#f97316", "#06b6d4"];
 
+// Códigos de crédito predefinidos
 const creditCodes = {
-    "ktnnj33191": 2000,
-    "SIfrO26500": 2000,
-    "selnX15685": 2000,
-    "lgpDg00003": 2000,
-    "UDjXH00004": 2000,
-    "qZcfA00005": 2000,
-    "Jccgl00006": 2000,
-    "LJlAM00007": 2000,
-    "qUUou00008": 2000,
-    "dAKpb00009": 2000,
-    "AnLED00010": 3000,
-    "XbIDP00011": 3000,
-    "qSskb00012": 3000,
-    "vxAkO00013": 3000,
-    "PDDAk00014": 3000,
-    "bORei00015": 5000,
-    "Pblml00016": 5000,
-    "kZMuR00017": 5000,
-    "euHbZ00018": 5000,
-    "XDbGI00019": 5000
+    // Códigos de 2000 créditos
+    "0Bdu2N1p": 2000, "0RdchqhF": 2000, "5AX3h85p": 2000, "6XH887Br": 2000, "76PeQOOZ": 2000,
+    "8ScdQcAM": 2000, "8rxivoWU": 2000, "924VviZi": 2000, "9wqb9ufy": 2000, "ABLeH1Ya": 2000,
+    "AC2yea4w": 2000, "Aq9l0emk": 2000, "BQDur2N6": 2000, "CgvN7xjZ": 2000, "DEHqnUkK": 2000,
+    "DSijxewm": 2000, "DeeqA8Vg": 2000, "GklQBvop": 2000, "GsszDcCy": 2000, "H0ChoLUw": 2000,
+    "HWRzGoCB": 2000, "HcOvbNWv": 2000, "HxJ42UUm": 2000, "HxciLkDV": 2000, "JCsXjWRA": 2000,
+    "KxoJbjv8": 2000, "LdJB4lDq": 2000, "MrTWg6Sm": 2000,
+    // Códigos de 4000 créditos
+    "00j3FzRu": 4000, "38UDEYjx": 4000, "64b4ezIs": 4000, "70rtSQBf": 4000, "7ETVDxXt": 4000,
+    "7gClHovz": 4000, "7hBnUE4E": 4000, "9F4Peefi": 4000, "9oInwXII": 4000, "AGZ8ChYn": 4000,
+    "AqMG364D": 4000, "BkU9BL7V": 4000, "Cky3EQUE": 4000, "EGW2dnhG": 4000, "EbaQdQWc": 4000,
+    "FFkEvMZn": 4000, "MTW3dLfE": 4000, "MWtSMvWD": 4000, "MavbJx8c": 4000, "Ny1ZhZN6": 4000,
+    // Códigos de 5000 créditos
+    "5IdLv4jR": 5000, "8vlyRU5W": 5000, "BEYz2rFT": 5000, "CPmJ5oYC": 5000, "IcRog70b": 5000,
+    "K2ocCdKW": 5000, "LO0qxEZF": 5000, "MfuVZn6t": 5000, "Mg6BcH65": 5000, "NgL89vtz": 5000,
+    "OELpbpeo": 5000, "U1hLyPmi": 5000, "Wt4NVNvi": 5000, "Y2SjeXUv": 5000, "ZpayGb9q": 5000,
+    "eCyIc3qb": 5000, "eVS3Kc2N": 5000, "flFX7S7B": 5000, "g7DAvaJg": 5000, "gKxhkZHP": 5000,
+    "hSlmDdYV": 5000, "tAqDRQef": 5000, "tBjusacC": 5000, "tC3R3mHa": 5000, "teiEASjG": 5000
 };
+
+// Conjunto global para almacenar todos los códigos usados
+let globalUsedCodes = new Set();
 
 function generatePlayerId() {
     return Math.floor(10000 + Math.random() * 90000).toString();
@@ -34,6 +36,10 @@ function savePlayer(player) {
     players[player.username] = player;
     localStorage.setItem('players', JSON.stringify(players));
     localStorage.setItem('currentPlayer', JSON.stringify(player));
+    
+    // Actualizar el conjunto global de códigos usados
+    player.usedCodes.forEach(code => globalUsedCodes.add(code));
+    localStorage.setItem('globalUsedCodes', JSON.stringify(Array.from(globalUsedCodes)));
 }
 
 function getPlayer(username) {
@@ -68,39 +74,42 @@ function loadPlayerAndStartGame(player) {
     updatePlayerInfo();
     updateCreditsDisplay();
     console.log('Jugador cargado:', player);
+    
+    // Cargar códigos usados globalmente
+    globalUsedCodes = new Set(JSON.parse(localStorage.getItem('globalUsedCodes')) || []);
 }
 
 function updatePlayerInfo() {
     document.getElementById('playerInfo').textContent = `Jugador: ${currentPlayer.username} (ID: ${currentPlayer.id})`;
 }
 
-function loadCredits(){
+function loadCredits() {
     if (currentPlayer) {
         credits = currentPlayer.credits;
         updateCreditsDisplay();
     }
 }
 
-function saveCredits(){
+function saveCredits() {
     if (currentPlayer) {
         currentPlayer.credits = credits;
         savePlayer(currentPlayer);
     }
 }
 
-function generateNumberGrid(){
-    const grid=document.querySelector(".g");
-    for(let i=1;i<=80;i++){
-        const button=document.createElement("button");
-        button.textContent=i;
-        button.addEventListener("click",()=>selectNumber(i));
+function generateNumberGrid() {
+    const grid = document.querySelector(".g");
+    for (let i = 1; i <= 80; i++) {
+        const button = document.createElement("button");
+        button.textContent = i;
+        button.addEventListener("click", () => selectNumber(i));
         grid.appendChild(button);
     }
 }
 
-function setupEventListeners(){
-    document.querySelectorAll(".b").forEach(button=>{
-        button.addEventListener("click",()=>changeTab(button.dataset.tab));
+function setupEventListeners() {
+    document.querySelectorAll(".b").forEach(button => {
+        button.addEventListener("click", () => switchTab(button.dataset.tab));
     });
     document.getElementById("cB").addEventListener("click", showCreditDialog);
     document.getElementById("loadCreditsBtn").addEventListener("click", showLoadCreditsForm);
@@ -113,8 +122,8 @@ function setupEventListeners(){
     document.getElementById("closeReceipt").addEventListener("click", hideReceiptScreen);
     document.getElementById("bB").addEventListener("click", buyTicket);
     document.getElementById("sB").addEventListener("click", startDraw);
-    document.getElementById("tP").addEventListener("change",e=>{
-        currentPrice=parseInt(e.target.value,10);
+    document.getElementById("tP").addEventListener("change", e => {
+        currentPrice = parseInt(e.target.value, 10);
     });
     document.getElementById("loginButton").addEventListener("click", loginPlayer);
     document.getElementById("logoutButton").addEventListener("click", logoutPlayer);
@@ -126,16 +135,16 @@ function logoutPlayer() {
     location.reload();
 }
 
-function changeTab(tabName){
-    document.querySelectorAll(".b").forEach(btn=>btn.classList.remove("a"));
-    document.querySelectorAll(".n").forEach(content=>content.classList.add("x"));
+function switchTab(tabName) {
+    document.querySelectorAll(".b").forEach(btn => btn.classList.remove("a"));
+    document.querySelectorAll(".n").forEach(content => content.classList.add("x"));
     document.querySelector(`.b[data-tab="${tabName}"]`).classList.add("a");
     document.getElementById(`${tabName}Tab`).classList.remove("x");
-    if(tabName==="buy"&&isDrawing) resetDraw();
+    if (tabName === "buy" && isInDraw) resetDraw();
     updateCreditsDisplay();
 }
 
-function showCreditDialog(){
+function showCreditDialog() {
     document.getElementById("cD").classList.add("visible");
     document.getElementById("loadCreditsForm").classList.add("x");
     document.getElementById("loadCreditsCodeForm").classList.add("x");
@@ -160,13 +169,11 @@ function showWithdrawCreditsForm() {
     document.getElementById("loadCreditsCodeForm").classList.add("x");
 }
 
-function hideCreditDialog(){
+function hideCreditDialog() {
     document.getElementById("cD").classList.remove("visible");
-    // Limpiar los campos del formulario de carga de créditos
     document.getElementById("loadPassword").value = "";
     document.getElementById("loadAmount").value = "";
     document.getElementById("loadCode").value = "";
-    // Limpiar el campo del formulario de retiro
     document.getElementById("withdrawAmount").value = "";
 }
 
@@ -185,42 +192,27 @@ function handleLoadCredits() {
             alert("Por favor, ingrese un monto válido.");
         }
     } else {
-        alert("Contraseña incorrecta.");
+        alert("Contraseña incorrecta. para cargar creditos comunicate al whatsapp +573247159521");
     }
 }
 
 function handleLoadCreditsCode() {
     const code = document.getElementById("loadCode").value;
-
-    if (validateCode(code)) {
-        if (creditCodes.hasOwnProperty(code) && !currentPlayer.usedCodes.includes(code)) {
-            const amount = creditCodes[code];
-            credits += amount;
-            currentPlayer.usedCodes.push(code);
-            updateCreditsDisplay();
-            saveCredits();
-            alert(`Se han cargado ${amount} créditos a tu cuenta.`);
-            hideCreditDialog();
-        } else {
-            alert("Código inválido o ya utilizado.");
-        }
+    
+    if (creditCodes.hasOwnProperty(code) && !globalUsedCodes.has(code)) {
+        const amount = creditCodes[code];
+        credits += amount;
+        currentPlayer.usedCodes.push(code);
+        globalUsedCodes.add(code);
+        updateCreditsDisplay();
+        saveCredits();
+        alert(`Se han cargado ${amount} créditos a tu cuenta.`);
+        hideCreditDialog();
+    } else if (globalUsedCodes.has(code)) {
+        alert("Este código ya ha sido utilizado por otro jugador.");
     } else {
-        alert("Formato de código inválido o no coincide con tu ID de jugador.");
+        alert("Código inválido. para cargar creditos comunicate al whatsapp +573247159521");
     }
-}
-
-function validateCode(code) {
-    // Verificar que el código tenga el formato correcto (5 letras seguidas de 5 números)
-    const codeRegex = /^[a-zA-Z]{5}\d{5}$/;
-    if (!codeRegex.test(code)) {
-        return false;
-    }
-
-    // Verificar que los últimos 5 dígitos del código coincidan con los últimos 5 dígitos del ID del jugador
-    const codeNumbers = code.slice(-5);
-    const playerIdNumbers = currentPlayer.id.slice(-5);
-
-    return codeNumbers === playerIdNumbers;
 }
 
 function handleWithdraw() {
@@ -267,34 +259,35 @@ function hideReceiptScreen() {
     }
 }
 
-function updateCreditsDisplay(){
+function updateCreditsDisplay() {
     const creditButton = document.getElementById("cB");
     creditButton.innerHTML = `💳 Créditos: $<span id="cA">${credits}</span>`;
 }
 
-function selectNumber(number){
-    const index=selectedNumbers.indexOf(number);
-    const button=document.querySelector(`.g button:nth-child(${number})`);
-    if(index>-1){
-        selectedNumbers.splice(index,1);
+function selectNumber(number) {
+    const index = selectedNumbers.indexOf(number);
+    const button = document.querySelector(`.g button:nth-child(${number})`);
+    if (index > -1) {
+        selectedNumbers.splice(index, 1);
         button.classList.remove("s");
-    }else if(selectedNumbers.length<3){
+    } else if (selectedNumbers.length < 3) {
         selectedNumbers.push(number);
         button.classList.add("s");
     }
-    document.getElementById("bB").disabled=selectedNumbers.length!==3||credits<currentPrice;
+    
+    document.getElementById("bB").disabled = selectedNumbers.length !== 3 || credits < currentPrice;
 }
 
-function buyTicket(){
-    if(selectedNumbers.length===3&&credits>=currentPrice){
-        const newTicket={
-            id:Date.now(),
-            numbers:[...selectedNumbers],
-            price:currentPrice,
-            matches:0
+function buyTicket() {
+    if (selectedNumbers.length === 3 && credits >= currentPrice) {
+        const newTicket = {
+            id: Date.now(),
+            numbers: [...selectedNumbers],
+            price: currentPrice,
+            matches: 0
         };
         tickets.push(newTicket);
-        credits-=currentPrice;
+        credits -= currentPrice;
         updateCreditsDisplay();
         saveCredits();
         renderTickets();
@@ -302,47 +295,48 @@ function buyTicket(){
     }
 }
 
-function renderTickets(){
-    const ticketsList=document.getElementById("tL");
-    ticketsList.innerHTML="";
-    tickets.forEach(ticket=>{
-        ticketsList.appendChild(createTicketElement(ticket));
+function renderTickets() {
+    const ticketList = document.getElementById("tL");
+    ticketList.innerHTML = "";
+    tickets.forEach(ticket => {
+        
+        ticketList.appendChild(createTicketElement(ticket));
     });
 }
 
-function createTicketElement(ticket,inDrawScreen=false){
-    const ticketElement=document.createElement("div");
+function createTicketElement(ticket, inDrawScreen = false) {
+    const ticketElement = document.createElement("div");
     ticketElement.classList.add("k");
-    ticketElement.innerHTML=`
+    ticketElement.innerHTML = `
         <div class="ticket-header"><span>#${ticket.id}</span><span>$${ticket.price}</span></div>
-        <div class="ticket-numbers">${ticket.numbers.map(num=>`
-            <span class="${inDrawScreen&&drawnNumbers.slice(0,currentDrawnIndex).includes(num)?"m":""}">${num}</span>
+        <div class="ticket-numbers">${ticket.numbers.map(num => `
+            <span class="${inDrawScreen && drawnNumbers.slice(0, currentNumberIndex).includes(num) ? "m" : ""}">${num}</span>
         `).join("")}</div>
     `;
-    if(inDrawScreen){
-        ticketElement.innerHTML+=`<div class="ticket-matches">Aciertos: ${ticket.matches}</div>`;
+    if (inDrawScreen) {
+        ticketElement.innerHTML += `<div class="ticket-matches">Aciertos: ${ticket.matches}</div>`;
     }
     return ticketElement;
 }
 
-function resetSelection(){
-    selectedNumbers=[];
-    document.querySelectorAll(".g button").forEach(button=>button.classList.remove("s"));
-    document.getElementById("bB").disabled=true;
+function resetSelection() {
+    selectedNumbers = [];
+    document.querySelectorAll(".g button").forEach(button => button.classList.remove("s"));
+    document.getElementById("bB").disabled = true;
 }
 
-function startDraw(){
-    if(tickets.length){
-        isDrawing=true;
-        drawnNumbers=[];
-        currentDrawnIndex=0;
-        winnings=0;
-        const availableNumbers=Array.from({length:80},(_,i)=>i+1);
-        for(let i=0;i<21;i++){
-            const randomIndex=Math.floor(Math.random()*availableNumbers.length);
-            const drawnNumber=availableNumbers[randomIndex];
+function startDraw() {
+    if (tickets.length) {
+        isInDraw = true;
+        drawnNumbers = [];
+        currentNumberIndex = 0;
+        winnings = 0;
+        const availableNumbers = Array.from({length: 80}, (_, i) => i + 1);
+        for (let i = 0; i < 21; i++) {
+            const randomIndex = Math.floor(Math.random() * availableNumbers.length);
+            const drawnNumber = availableNumbers[randomIndex];
             drawnNumbers.push(drawnNumber);
-            availableNumbers.splice(randomIndex,1);
+            availableNumbers.splice(randomIndex, 1);
         }
         document.getElementById("sB").classList.add("x");
         document.getElementById("dR").classList.remove("x");
@@ -350,68 +344,68 @@ function startDraw(){
     }
 }
 
-function drawNextNumber(){
-    if(currentDrawnIndex<21){
-        document.getElementById("cB").textContent=currentDrawnIndex+1;
+function drawNextNumber() {
+    if (currentNumberIndex < 21) {
+        document.getElementById("cB").textContent = currentNumberIndex + 1;
         renderDrawnNumbers();
         updateTicketMatches();
         renderTicketsInDraw();
-        currentDrawnIndex++;
-        setTimeout(drawNextNumber,1000);
-    }else{
+        currentNumberIndex++;
+        setTimeout(drawNextNumber, 1000);
+    } else {
         calculateWinnings();
     }
 }
 
-function renderDrawnNumbers(){
-    const drawnNumbersElement=document.getElementById("dN");
-    drawnNumbersElement.innerHTML="";
-    for(let i=0;i<currentDrawnIndex;i++){
-        const numberElement=document.createElement("div");
-        numberElement.style.backgroundColor=colors[i%colors.length];
-        numberElement.textContent=drawnNumbers[i];
+function renderDrawnNumbers() {
+    const drawnNumbersElement = document.getElementById("dN");
+    drawnNumbersElement.innerHTML = "";
+    for (let i = 0; i < currentNumberIndex; i++) {
+        const numberElement = document.createElement("div");
+        numberElement.style.backgroundColor = colors[i % colors.length];
+        numberElement.textContent = drawnNumbers[i];
         drawnNumbersElement.appendChild(numberElement);
     }
 }
 
-function updateTicketMatches(){
-    tickets.forEach(ticket=>{
-        ticket.matches=ticket.numbers.filter(num=>
-            drawnNumbers.slice(0,currentDrawnIndex).includes(num)
+function updateTicketMatches() {
+    tickets.forEach(ticket => {
+        ticket.matches = ticket.numbers.filter(num =>
+            drawnNumbers.slice(0, currentNumberIndex).includes(num)
         ).length;
     });
 }
 
-function renderTicketsInDraw(){
-    const ticketsInDraw=document.getElementById("tD");
-    ticketsInDraw.innerHTML="";
+function renderTicketsInDraw() {
+    const ticketsInDraw = document.getElementById("tD");
+    ticketsInDraw.innerHTML = "";
     
-    tickets.sort((a,b)=>b.matches-a.matches).forEach(ticket=>{
-        ticketsInDraw.appendChild(createTicketElement(ticket,true));
+    tickets.sort((a, b) => b.matches - a.matches).forEach(ticket => {
+        ticketsInDraw.appendChild(createTicketElement(ticket, true));
     });
 }
 
-function calculateWinnings(){
-    tickets.forEach(ticket=>{
-        if(ticket.matches===3){
-            winnings+=ticket.price*50;
+function calculateWinnings() {
+    tickets.forEach(ticket => {
+        if (ticket.matches === 3) {
+            winnings += ticket.price * 50;
         }
     });
-    credits+=winnings;
+    credits += winnings;
     updateCreditsDisplay();
     saveCredits();
     document.getElementById("wI").classList.remove("x");
-    document.getElementById("wI").textContent=winnings>0
-        ?`¡Felicidades! Ganaste  $${winnings}`
-        :"No hubo ganadores esta vez";
+    document.getElementById("wI").textContent = winnings > 0
+        ? `¡Felicidades! Ganaste $${winnings}`
+        : "No hubo ganadores esta vez";
 }
 
-function resetDraw(){
-    isDrawing=false;
-    tickets=[];
-    drawnNumbers=[];
-    currentDrawnIndex=0;
-    winnings=0;
+function resetDraw() {
+    isInDraw = false;
+    tickets = [];
+    drawnNumbers = [];
+    currentNumberIndex = 0;
+    winnings = 0;
     document.getElementById("sB").classList.remove("x");
     document.getElementById("dR").classList.add("x");
     document.getElementById("wI").classList.add("x");
@@ -422,6 +416,9 @@ function resetDraw(){
 document.addEventListener("DOMContentLoaded", () => {
     generateNumberGrid();
     setupEventListeners();
+    
+    // Cargar códigos usados globalmente
+    globalUsedCodes = new Set(JSON.parse(localStorage.getItem('globalUsedCodes')) || []);
     
     const savedPlayer = JSON.parse(localStorage.getItem('currentPlayer'));
     if (savedPlayer) {
