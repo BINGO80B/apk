@@ -3,22 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Juego de Lotería</title>
+    <title>BINGO TICKET</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        .auto-buy-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+        .auto-buy-buttons button {
+            flex: 1;
+            margin: 0 5px;
+            padding: 5px;
+            font-size: 12px;
+        }
+        #jackpotContainer {
+            position: relative;
+            width: 100%;
+            height: 30px;
+            background-color: #e5e7eb;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+        #jackpotProgress {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background-color: #f97316;
+            transition: width 0.3s ease-out;
+        }
+        #jackpotLabel {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            z-index: 1;
+        }
+    </style>
 </head>
 <body>
     <div class="c">
         <div id="authScreen" class="d">
-            <h1>Bienvenido al Juego de Lotería</h1>
+            <h1>Bienvenido a BINGO TICKET</h1>
             <div id="loginForm">
                 <input type="text" id="usernameInput" placeholder="Nombre de usuario" required>
                 <button id="loginButton">Entrar al Juego</button>
             </div>
         </div>
         <div id="gameScreen" class="d x">
-            <h1>Juego de Lotería</h1>
+            <h1>BINGO TICKET</h1>
             <div id="playerInfo"></div>
             <button id="logoutButton">Cerrar Sesión</button>
+            <div id="jackpotContainer">
+                <div id="jackpotProgress"></div>
+                <div id="jackpotLabel">Jackpot</div>
+            </div>
             <div class="t">
                 <button class="b a" data-tab="buy">Comprar</button>
                 <button class="b" data-tab="draw">Sorteo</button>
@@ -34,6 +81,11 @@
                 </div>
                 <div class="g"></div>
                 <button id="bB" class="e" disabled>Comprar Ticket</button>
+                <div class="auto-buy-buttons">
+                    <button id="autoBuy3" class="e">CAT 3</button>
+                    <button id="autoBuy4" class="e">CAT 4</button>
+                    <button id="autoBuy5" class="e">CAT 5</button>
+                </div>
                 <div id="tL"></div>
             </div>
             <div id="drawTab" class="n x">
@@ -72,6 +124,11 @@
         <div class="m">
             <h2>Recibo de Retiro</h2>
             <div id="receiptContent"></div>
+            <div id="withdrawalCode"></div>
+            <div id="winningsHistory">
+                <h3>Historial de Ganancias</h3>
+                <ul id="winningsHistoryList"></ul>
+            </div>
             <button id="closeReceipt">Cerrar Recibo</button>
         </div>
     </div>

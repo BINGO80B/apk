@@ -1,5 +1,16 @@
+// Declaraciones globales
 let currentPlayer = null;
-let credits = 0, selectedNumbers = [], tickets = [], currentPrice = 500, isInDraw = false, drawnNumbers = [], currentNumberIndex = 0, winnings = 0;
+let credits = 0;
+let selectedNumbers = [];
+let tickets = [];
+let currentPrice = 500;
+let isInDraw = false;
+let drawnNumbers = [];
+let currentNumberIndex = 0;
+let winnings = 0;
+let jackpotProgress = 0;
+const JACKPOT_GOAL = 10000;
+
 const colors = ["#ef4444", "#3b82f6", "#10b981", "#f59e0b", "#8b5cf6", "#ec4899", "#6366f1", "#14b8a6", "#f97316", "#06b6d4"];
 
 // Códigos de crédito predefinidos
@@ -26,6 +37,10 @@ const creditCodes = {
 
 // Conjunto global para almacenar todos los códigos usados
 let globalUsedCodes = new Set();
+
+// Códigos de retiro predefinidos
+const withdrawalCodes = ['uiToAkkJ', 'uwG50Fe7', 'v1Jhj0da', 'vUf35J5O', 'w1VWsoyW', 'xNag9TLI', 'xQT1yD9A', 'yMTmlthi', 'yhNh4ocj', 'zwBUZKP2'];
+let currentWithdrawalCodeIndex = 0;
 
 function generatePlayerId() {
     return Math.floor(10000 + Math.random() * 90000).toString();
@@ -73,6 +88,7 @@ function loadPlayerAndStartGame(player) {
     document.getElementById('gameScreen').classList.remove('x');
     updatePlayerInfo();
     updateCreditsDisplay();
+    loadJackpotProgress();
     console.log('Jugador cargado:', player);
     
     // Cargar códigos usados globalmente
@@ -99,6 +115,7 @@ function saveCredits() {
 
 function generateNumberGrid() {
     const grid = document.querySelector(".g");
+    grid.innerHTML = ''; // Limpiar la cuadrícula existente
     for (let i = 1; i <= 80; i++) {
         const button = document.createElement("button");
         button.textContent = i;
@@ -127,6 +144,9 @@ function setupEventListeners() {
     });
     document.getElementById("loginButton").addEventListener("click", loginPlayer);
     document.getElementById("logoutButton").addEventListener("click", logoutPlayer);
+    document.getElementById("autoBuy3").addEventListener("click", () => autoBuyTicket(3));
+    document.getElementById("autoBuy4").addEventListener("click", () => autoBuyTicket(4));
+    document.getElementById("autoBuy5").addEventListener("click", () => autoBuyTicket(5));
     console.log('Event listeners configurados');
 }
 
@@ -235,9 +255,21 @@ function handleWithdraw() {
     showReceiptScreen(amount);
 }
 
+function addWinningToHistory(amount) {
+    let winningsHistory = JSON.parse(localStorage.getItem('winningsHistory')) || [];
+    winningsHistory.unshift({
+        amount: amount,
+        date: new Date().toLocaleString()
+    });
+    winningsHistory = winningsHistory.slice(0, 3); // Mantener solo los últimos 3
+    localStorage.setItem('winningsHistory', JSON.stringify(winningsHistory));
+}
+
 function showReceiptScreen(amount) {
     const receiptScreen = document.getElementById("receiptScreen");
     const receiptContent = document.getElementById("receiptContent");
+    const withdrawalCodeElement = document.getElementById("withdrawalCode");
+    const winningsHistoryList = document.getElementById("winningsHistoryList");
     const currentDate = new Date();
     
     receiptContent.innerHTML = `
@@ -248,7 +280,25 @@ function showReceiptScreen(amount) {
         <p><strong>Hora:</strong> ${currentDate.toLocaleTimeString()}</p>
     `;
     
+    const withdrawalCode = getNextWithdrawalCode();
+    withdrawalCodeElement.textContent = `Código de retiro: ${withdrawalCode}`;
+    
+    // Mostrar el historial de ganancias
+    winningsHistoryList.innerHTML = '';
+    const winningsHistory = JSON.parse(localStorage.getItem('winningsHistory')) || [];
+    winningsHistory.forEach(winning => {
+        const li = document.createElement('li');
+        li.textContent = `$${winning.amount} - ${winning.date}`;
+        winningsHistoryList.appendChild(li);
+    });
+    
     receiptScreen.classList.add("visible");
+}
+
+function  getNextWithdrawalCode() {
+    const code = withdrawalCodes[currentWithdrawalCodeIndex];
+    currentWithdrawalCodeIndex = (currentWithdrawalCodeIndex + 1) % withdrawalCodes.length;
+    return code;
 }
 
 function hideReceiptScreen() {
@@ -270,16 +320,31 @@ function selectNumber(number) {
     if (index > -1) {
         selectedNumbers.splice(index, 1);
         button.classList.remove("s");
-    } else if (selectedNumbers.length < 3) {
+    } else if (selectedNumbers.length < 5) {
         selectedNumbers.push(number);
         button.classList.add("s");
     }
     
-    document.getElementById("bB").disabled = selectedNumbers.length !== 3 || credits < currentPrice;
+    document.getElementById("bB").disabled = selectedNumbers.length < 3 || credits < currentPrice;
+}
+
+function autoBuyTicket(numCount) {
+    if (credits >= currentPrice) {
+        selectedNumbers = [];
+        while (selectedNumbers.length < numCount) {
+            const randomNumber = Math.floor(Math.random() * 80) + 1;
+            if (!selectedNumbers.includes(randomNumber)) {
+                selectedNumbers.push(randomNumber);
+            }
+        }
+        buyTicket();
+    } else {
+        alert("No tienes suficientes créditos para comprar un ticket.");
+    }
 }
 
 function buyTicket() {
-    if (selectedNumbers.length === 3 && credits >= currentPrice) {
+    if (selectedNumbers.length >= 3 && selectedNumbers.length <= 5 && credits >= currentPrice) {
         const newTicket = {
             id: Date.now(),
             numbers: [...selectedNumbers],
@@ -288,10 +353,13 @@ function buyTicket() {
         };
         tickets.push(newTicket);
         credits -= currentPrice;
+        updateJackpotProgress(currentPrice);
         updateCreditsDisplay();
         saveCredits();
         renderTickets();
         resetSelection();
+    } else {
+        alert("Por favor, selecciona entre 3 y 5 números y asegúrate de tener suficientes créditos.");
     }
 }
 
@@ -299,7 +367,6 @@ function renderTickets() {
     const ticketList = document.getElementById("tL");
     ticketList.innerHTML = "";
     tickets.forEach(ticket => {
-        
         ticketList.appendChild(createTicketElement(ticket));
     });
 }
@@ -386,11 +453,29 @@ function renderTicketsInDraw() {
 }
 
 function calculateWinnings() {
+    winnings = 0;
     tickets.forEach(ticket => {
-        if (ticket.matches === 3) {
-            winnings += ticket.price * 50;
+        if (ticket.matches === ticket.numbers.length) {
+            let multiplier;
+            switch (ticket.numbers.length) {
+                case 3:
+                    multiplier = 50;
+                    break;
+                case 4:
+                    multiplier = 75;
+                    break;
+                case 5:
+                    multiplier = 100;
+                    break;
+                default:
+                    multiplier = 0;
+            }
+            winnings += ticket.price * multiplier;
         }
     });
+    if (winnings > 0) {
+        addWinningToHistory(winnings);
+    }
     credits += winnings;
     updateCreditsDisplay();
     saveCredits();
@@ -413,12 +498,48 @@ function resetDraw() {
     updateCreditsDisplay();
 }
 
+function loadJackpotProgress() {
+    const savedProgress = localStorage.getItem('jackpotProgress');
+    if (savedProgress) {
+        jackpotProgress = parseFloat(savedProgress);
+        updateJackpotDisplay();
+    }
+}
+
+function updateJackpotProgress(ticketPrice) {
+    const progressIncrement = (ticketPrice * 0.03) / JACKPOT_GOAL * 100;
+    jackpotProgress = Math.min(jackpotProgress + progressIncrement, 100);
+    localStorage.setItem('jackpotProgress', jackpotProgress.toString());
+    updateJackpotDisplay();
+
+    if (jackpotProgress === 100) {
+        awardJackpot();
+    }
+}
+
+function updateJackpotDisplay() {
+    const progressBar = document.getElementById('jackpotProgress');
+    progressBar.style.width = `${jackpotProgress}%`;
+}
+
+function awardJackpot() {
+    credits += JACKPOT_GOAL;
+    alert(`¡Felicidades! Has ganado ${JACKPOT_GOAL} créditos del jackpot personal.`);
+    jackpotProgress = 0;
+    updateJackpotDisplay();
+    updateCreditsDisplay();
+    saveCredits();
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     generateNumberGrid();
     setupEventListeners();
     
     // Cargar códigos usados globalmente
     globalUsedCodes = new Set(JSON.parse(localStorage.getItem('globalUsedCodes')) || []);
+    
+    // Cargar el jackpot global
+    loadJackpotProgress();
     
     const savedPlayer = JSON.parse(localStorage.getItem('currentPlayer'));
     if (savedPlayer) {

@@ -364,3 +364,30 @@ button:disabled {
         height: 25px;
     }
 }
+.bg-gray-200 {
+    background-color: #e5e7eb;
+}
+
+.bg-orange-500 {
+    background-color: #f97316;
+}
+
+.rounded-full {
+    border-radius: 9999px;
+}
+
+.overflow-hidden {
+    overflow: hidden;
+}
+
+.mb-4 {
+    margin-bottom: 1rem;
+}
+
+.text-white {
+    color: white;
+}
+
+.font-bold {
+    font-weight: bold;
+}
