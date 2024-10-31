@@ -1,3 +1,59 @@
+    #jackpotContainer {
+    position: relative;
+    width: 100%;
+    height: 30px;
+    background-color: #e5e7eb;
+    border-radius: 15px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+}
+
+#jackpotProgress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background-color: #f97316;
+    transition: width 0.3s ease-out;
+}
+
+#jackpotLabel {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    z-index: 1;
+}
+
+#jackpotDialog {
+    display: none;
+}
+
+#jackpotDialog.visible {
+    display: block;
+}
+
+.jackpot-code {
+    font-size: 24px;
+    font-weight: bold;
+    margin: 20px 0;
+    color: #f97316;
+}
+
+#closeJackpotDialog {
+    background-color: #f97316;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
 body {
     font-family: sans-serif;
     margin: 0;
@@ -390,4 +446,62 @@ button:disabled {
 
 .font-bold {
     font-weight: bold;
+}
+/* Estilos existentes */
+/* ... */
+
+#jackpotDialog {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+#jackpotDialog.visible {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#jackpotDialog .m {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    max-width: 80%;
+}
+
+#jackpotDialog h2 {
+    color: #333;
+    margin-bottom: 15px;
+}
+
+#jackpotDialog p {
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.jackpot-code {
+    font-size: 36px;
+    font-weight: bold;
+    color: #f97316;
+    margin: 20px 0;
+}
+
+#closeJackpotDialog {
+    background-color: #f97316;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#closeJackpotDialog:hover {
+    background-color: #ea580c;
 }
