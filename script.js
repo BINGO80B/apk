@@ -9,7 +9,7 @@ let drawnNumbers = [];
 let currentNumberIndex = 0;
 let winnings = 0;
 let jackpotProgress = 0;
-const JACKPOT_GOAL = 2000; // Actualizado de 10000 a 4000
+const JACKPOT_GOAL = 2000;
 
 const colors = ["#ef4444", "#3b82f6", "#10b981", "#f59e0b", "#8b5cf6", "#ec4899", "#6366f1", "#14b8a6", "#f97316", "#06b6d4"];
 
@@ -122,7 +122,7 @@ function saveCredits() {
 
 function generateNumberGrid() {
     const grid = document.querySelector(".g");
-    grid.innerHTML = ''; // Limpiar la cuadrícula existente
+    grid.innerHTML = '';
     for (let i = 1; i <= 80; i++) {
         const button = document.createElement("button");
         button.textContent = i;
@@ -269,7 +269,7 @@ function addWinningToHistory(amount) {
         amount: amount,
         date: new Date().toLocaleString()
     });
-    winningsHistory = winningsHistory.slice(0, 3); // Mantener solo los últimos 3
+    winningsHistory = winningsHistory.slice(0, 3);
     localStorage.setItem('winningsHistory', JSON.stringify(winningsHistory));
 }
 
@@ -289,9 +289,8 @@ function showReceiptScreen(amount) {
     `;
 
     const withdrawalCode = getNextWithdrawalCode();
-    withdrawalCodeElement.textContent = `Código de retiro: ${withdrawalCode}`;
+    withdrawalCodeElement.textContent =   `Código de retiro: ${withdrawalCode}`;
 
-    // Mostrar el historial de ganancias
     winningsHistoryList.innerHTML = '';
     const winningsHistory = JSON.parse(localStorage.getItem('winningsHistory')) || [];
     winningsHistory.forEach(winning => {
@@ -519,7 +518,7 @@ function loadJackpotProgress() {
 }
 
 function updateJackpotProgress(ticketPrice) {
-    const progressIncrement = (ticketPrice * 0.05) / JACKPOT_GOAL * 100; // Actualizado de 0.03 a 0.05
+    const progressIncrement = (ticketPrice * 0.05) / JACKPOT_GOAL * 100;
     jackpotProgress = Math.min(jackpotProgress + progressIncrement, 100);
     localStorage.setItem('jackpotProgress', jackpotProgress.toString());
     updateJackpotDisplay();
@@ -560,10 +559,8 @@ document.addEventListener("DOMContentLoaded", () => {
     generateNumberGrid();
     setupEventListeners();
 
-    // Cargar códigos usados globalmente
     globalUsedCodes = new Set(JSON.parse(localStorage.getItem('globalUsedCodes')) || []);
 
-    // Cargar el jackpot global
     loadJackpotProgress();
 
     const savedPlayer = JSON.parse(localStorage.getItem('currentPlayer'));

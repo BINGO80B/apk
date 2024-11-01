@@ -1,59 +1,3 @@
-    #jackpotContainer {
-    position: relative;
-    width: 100%;
-    height: 30px;
-    background-color: #e5e7eb;
-    border-radius: 15px;
-    overflow: hidden;
-    margin-bottom: 1rem;
-}
-
-#jackpotProgress {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    background-color: #f97316;
-    transition: width 0.3s ease-out;
-}
-
-#jackpotLabel {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-weight: bold;
-    z-index: 1;
-}
-
-#jackpotDialog {
-    display: none;
-}
-
-#jackpotDialog.visible {
-    display: block;
-}
-
-.jackpot-code {
-    font-size: 24px;
-    font-weight: bold;
-    margin: 20px 0;
-    color: #f97316;
-}
-
-#closeJackpotDialog {
-    background-color: #f97316;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-}
 body {
     font-family: sans-serif;
     margin: 0;
@@ -62,7 +6,7 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background-image: url('https://www.lavanguardia.com/andro4all/hero/2022/08/Las-mejores-aplicaciones-para-jugar-al-bingo.jpg?width=1200&aspect_ratio=16:9'); /* Replace with your actual image URL */
+    background-image: url('https://www.lavanguardia.com/andro4all/hero/2022/08/Las-mejores-aplicaciones-para-jugar-al-bingo.jpg?width=1200&aspect_ratio=16:9');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -76,14 +20,14 @@ body {
 }
 
 .d {
-    background: rgba(230, 247, 230, 0.5); /* Más transparente */
+    background: rgba(230, 247, 230, 0.5);
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     padding: 20px;
-    backdrop-filter: blur(5px); /* Añade un efecto de desenfoque */
-    -webkit-backdrop-filter: blur(5px); /* Para compatibilidad con Safari */
-    color: #1f2937; /* Color de texto más oscuro para mejor contraste */
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    color: #1f2937;
 }
 
 h1, h2 {
@@ -328,13 +272,14 @@ button:disabled {
 }
 
 #loadCreditsBtn, #withdrawCreditsBtn {
-    background: #3b82f6;
-    color: #fff;
+    background: #fbbf24;
+    color: #1f2937;
     margin-bottom: 10px;
 }
 
 #confirmLoadCredits, #confirmWithdraw {
-    background: #10b981;
+    background: #fbbf24;
+    color: #1f2937;
 }
 
 #clB {
@@ -367,10 +312,10 @@ button:disabled {
 }
 
 #closeReceipt {
-    background: #3b82f6;
+    background: #fbbf24;
+    color: #1f2937;
 }
 
-/* Styles for the new ticket design */
 .ticket {
     background-color: rgba(248, 249, 250, 0.7);
     border: 1px solid #dee2e6;
@@ -395,7 +340,7 @@ button:disabled {
     text-align: center;
     padding: 5px;
     font-size: 14px;
-    width: 11.11%; /* 100% / 9 columns */
+    width: 11.11%;
     height: 30px;
 }
 
@@ -413,42 +358,38 @@ button:disabled {
     border-radius: 50%;
 }
 
-@media (max-width: 600px) {
-    .ticket td {
-        font-size: 12px;
-        padding: 3px;
-        height: 25px;
-    }
-}
-.bg-gray-200 {
+#jackpotContainer {
+    position: relative;
+    width: 100%;
+    height: 30px;
     background-color: #e5e7eb;
-}
-
-.bg-orange-500 {
-    background-color: #f97316;
-}
-
-.rounded-full {
-    border-radius: 9999px;
-}
-
-.overflow-hidden {
+    border-radius: 15px;
     overflow: hidden;
-}
-
-.mb-4 {
     margin-bottom: 1rem;
 }
 
-.text-white {
-    color: white;
+#jackpotProgress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background-color: #fbbf24;
+    transition: width 0.3s ease-out;
 }
 
-.font-bold {
+#jackpotLabel {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #1f2937;
     font-weight: bold;
+    z-index: 1;
 }
-/* Estilos existentes */
-/* ... */
 
 #jackpotDialog {
     display: none;
@@ -488,13 +429,13 @@ button:disabled {
 .jackpot-code {
     font-size: 36px;
     font-weight: bold;
-    color: #f97316;
+    color: #fbbf24;
     margin: 20px 0;
 }
 
 #closeJackpotDialog {
-    background-color: #f97316;
-    color: white;
+    background-color: #fbbf24;
+    color: #1f2937;
     border: none;
     padding: 10px 20px;
     border-radius: 5px;
@@ -503,5 +444,61 @@ button:disabled {
 }
 
 #closeJackpotDialog:hover {
-    background-color: #ea580c;
+    background-color: #f59e0b;
+}
+
+.cat-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 10px 0;
+}
+
+.cat-button {
+    font-size: 0.8rem;
+    padding: 5px 10px;
+    background-color: #fbbf24;
+    color: #1f2937;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.cat-button:hover {
+    background-color: #f59e0b;
+}
+
+.cat-button:focus {
+    outline: 2px solid #4299e1;
+    outline-offset: 2px;
+}
+
+#bB {
+    margin-top: 10px;
+    background-color: #fbbf24;
+    color: #1f2937;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#bB:hover {
+    background-color: #f59e0b;
+}
+
+#bB:disabled {
+    background-color: #cbd5e0;
+    cursor: not-allowed;
+}
+
+@media (max-width: 600px) {
+    .ticket td {
+        font-size: 12px;
+        padding: 3px;
+        height: 25px;
+    }
 }
