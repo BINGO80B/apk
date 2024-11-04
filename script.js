@@ -286,7 +286,7 @@ function hideReceiptScreen() {
 
 function updateBalanceDisplay() {
     const balanceButton = document.getElementById("cB");
-    balanceButton.innerHTML = `💰 Saldo: $<span id="cA">${balance}</span>`;
+    balanceButton.innerHTML = `💰 Saldo $<span id="cA">${balance}</span>`;
 }
 
 function selectNumber(number) {
@@ -324,7 +324,7 @@ function autoBuyTicket(numCount) {
         }
         buyTicket();
     } else {
-        alert("No tienes suficiente saldo para comprar un ticket.");
+        alert("No tienes suficiente saldo para comprar un ticket, presiona el boton (CARGAR SALDO)");
     }
 }
 
@@ -344,7 +344,7 @@ function buyTicket() {
         renderTickets();
         resetSelection();
     } else {
-        alert("Por favor, selecciona entre 3 y 5 números y asegúrate de tener suficiente saldo.");
+        alert("Si no tienes Saldo, presiona el boton (CARGAR SALDO)");
     }
 }
 
@@ -418,7 +418,7 @@ function startDraw() {
 
 function drawNextNumber() {
     if (currentNumberIndex < 21) {
-        document.getElementById("cB").textContent = currentNumberIndex + 1;
+        document.getElementById("cB").textContent = currentNumberIndex + 0;
         renderDrawnNumbers();
         updateTicketMatches();
         renderTicketsInDraw();
@@ -493,7 +493,7 @@ function calculateWinnings() {
     document.getElementById("wI").classList.remove("x");
     document.getElementById("wI").textContent = winnings > 0
         ? `¡Felicidades! Ganaste $${winnings}`
-        : "No hubo ganadores esta vez";
+        : "¡felicitaciones a los ganadores de este Sorteo!";
 }
 
 function resetDraw() {
@@ -559,7 +559,7 @@ function hideJackpotDialog() {
 }
 
 function connectToWhatsApp() {
-    window.open('https://wa.me/573247159521', '_blank');
+    window.open('https://wa.me/qr/FMCXPXIEOSGRL1', '_blank');
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -606,6 +606,6 @@ function updatePlayerCount() {
     document.getElementById('playerCount').textContent = playerCount;
 }
 
-// Actualizar el conteo cada 30 segundos
-setInterval(updatePlayerCount, 30000);
+// Actualizar el conteo cada 10 segundos
+setInterval(updatePlayerCount, 10000);
 
