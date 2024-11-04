@@ -1,104 +1,113 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BINGO TICKET</title>
+    <title>Bingo Ticket</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="c">
-        <div id="authScreen" class="d">
-            <h1>Bienvenido a BINGO TICKET</h1>
-            <div id="loginForm">
-                <input type="text" id="usernameInput" placeholder="Nombre de usuario" required>
-                <button id="loginButton">Entrar al Juego</button>
+        <div class="d">
+            <div id="authScreen">
+                <h2>Iniciar Sesión</h2>
+                <input type="text" id="usernameInput" placeholder="Nombre de usuario">
+                <button id="loginButton">Iniciar Sesión</button>
+                <p class="switch-link" id="showRegister">¿No tienes cuenta? Regístrate</p>
             </div>
-        </div>
-        <div id="gameScreen" class="d x">
-            <h1>BINGO TICKET</h1>
-            <div id="playerInfo"></div>
-            <button id="logoutButton">Cerrar Sesión</button>
-            <div id="jackpotContainer">
-                <div id="jackpotProgress"></div>
-                <div id="jackpotLabel">Jackpot</div>
-            </div>
-            <div class="t">
-                <button class="b a" data-tab="buy">Comprar</button>
-                <button class="b" data-tab="draw">Sorteo</button>
-            </div>
-            <div id="buyTab" class="n">
-                <div class="o">
-                    <button id="cB">💳 Créditos: $<span id="cA">0</span></button>
-                    <select id="tP">
-                        <option value="500">$500</option>
-                        <option value="1000">$1000</option>
-                        <option value="2000">$2000</option>
-                    </select>
+
+            <div id="gameScreen" class="x">
+                <div class="user-info-container">
+                    <div id="playerInfo"></div>
+                    <div id="playerCounter" class="player-counter">
+                        <span class="online-dot"></span>
+                        <span id="playerCount">0</span>
+                    </div>
                 </div>
-                <div class="g"></div>
-                <div class="cat-buttons">
-                    <button id="autoBuy3" class="cat-button">CAT 3</button>
-                    <button id="autoBuy4" class="cat-button">CAT 4</button>
-                    <button id="autoBuy5" class="cat-button">CAT 5</button>
+                
+                <div id="jackpotContainer">
+                    <div id="jackpotProgress"></div>
+                    <div id="jackpotLabel">Jackpot </div>
                 </div>
-                <button id="bB" disabled>Comprar Ticket</button>
-                <div id="tL"></div>
-            </div>
-            <div id="drawTab" class="n x">
-                <button id="sB" class="e">Iniciar Sorteo</button>
-                <div id="dR" class="x">
-                    <div id="dN"></div>
-                    <div id="tD"></div>
+
+                <div class="top-controls">
+                    <button id="cB">💰 Saldo $<span id="cA">0</span></button>
+                    <button id="loadBalanceBtn">CARGAR SALDO</button>
                 </div>
-                <div id="wI" class="x"></div>
+
+                <div id="countdownTimer">Tiempo restante para el sorteo <span id="countdown">60</span> segundos</div>
+
+                <div id="buyTab" class="n">
+                    <div class="o">
+                        <select id="tP">
+                            <option value="500">$500</option>
+                            <option value="1000">$1000</option>
+                            <option value="1500">$1500</option>
+                            <option value="2000">$2000</option>
+                        </select>
+                    </div>
+                    <div class="g"></div>
+                    <div class="cat-buttons">
+                        <button id="autoBuy3" class="cat-button">CAT 3</button>
+                        <button id="autoBuy4" class="cat-button">CAT 4</button>
+                        <button id="autoBuy5" class="cat-button">CAT 5</button>
+                    </div>
+                    <button id="buyTicketBtn" class="buy-ticket-button">Comprar Ticket</button>
+                    <div id="tL"></div>
+                </div>
+
+                <div id="drawTab" class="n x">
+                    <div id="dR" class="x">
+                        <h2>Números Sorteados</h2>
+                        <div id="dN"></div>
+                        <div id="tD"></div>
+                        <div id="wI" class="x"></div>
+                    </div>
+                </div>
+
+                <button id="logoutButton">Cerrar Sesión</button>
             </div>
         </div>
     </div>
+
     <div id="cD" class="l">
         <div class="m">
-            <h2>Gestión de Créditos</h2>
-            <button id="loadCreditsBtn">Cargar Créditos con Contraseña</button>
-            <button id="loadCreditsCodeBtn">Cargar Créditos con Código</button>
-            <button id="withdrawCreditsBtn">Retirar Créditos</button>
-            <div id="loadCreditsForm" class="x">
-                <input type="password" id="loadPassword" placeholder="Contraseña">
-                <input type="number" id="loadAmount" placeholder="Monto a cargar" min="1">
-                <button id="confirmLoadCredits">Confirmar Carga</button>
-            </div>
+            <h2>Gestionar Saldo</h2>
+            <button id="loadCreditsBtn">Cargar Saldo</button>
+            <button id="withdrawCreditsBtn">Retirar Saldo</button>
             <div id="loadCreditsCodeForm" class="x">
-                <input type="text" id="loadCode" placeholder="Código de carga (formato: XXXXX00000)" maxlength="10">
-                <button id="confirmLoadCreditsCode">Confirmar Carga con Código</button>
+                <input type="text" id="loadCode" placeholder="Ingrese el código">
+                <button id="confirmLoadCreditsCode">Cargar Saldo</button>
             </div>
             <div id="withdrawCreditsForm" class="x">
-                <input type="number" id="withdrawAmount" placeholder="Monto a retirar" min="1">
+                <input type="number" id="withdrawAmount" placeholder="Monto a retirar">
                 <button id="confirmWithdraw">Confirmar Retiro</button>
             </div>
             <button id="clB">Cerrar</button>
         </div>
     </div>
+
     <div id="receiptScreen" class="l">
-        <div class="m">
+        <div class="m receipt-content">
             <h2>Recibo de Retiro</h2>
             <div id="receiptContent"></div>
-            <div id="withdrawalCode"></div>
-            <div id="winningsHistory">
-                <h3>Historial de Ganancias</h3>
-                <ul id="winningsHistoryList"></ul>
-            </div>
-            <button id="closeReceipt">Cerrar Recibo</button>
+            <p id="withdrawalCode"></p>
+            <h3>Historial de Ganancias</h3>
+            <ul id="winningsHistoryList"></ul>
+            <button id="closeReceipt">Cerrar</button>
         </div>
     </div>
+
     <div id="jackpotDialog" class="l">
         <div class="m">
-            <h2>¡Felicidades! Activaste la función del jackpot global</h2>
-            <p>Comunícate al WhatsApp +573247159521 para que te registres con este número:</p>
-            <p id="jackpotCode" class="jackpot-code"></p>
-            <p>para que participes por el acumulado Global.</p>
+            <h2>¡Felicidades!</h2>
+            <p>activaste el jackpot este es tu codigo:</p>
+            <div id="jackpotCode" class="jackpot-code"></div>
+            <p>Contacta al administrador para que participes en el sorteo global.</p>
             <button id="closeJackpotDialog">Cerrar</button>
         </div>
     </div>
+
     <script src="script.js"></script>
 </body>
 </html>

@@ -1,6 +1,6 @@
 // Declaraciones globales
 let currentPlayer = null;
-let credits = 0;
+let balance = 0;
 let selectedNumbers = [];
 let tickets = [];
 let currentPrice = 500;
@@ -10,6 +10,8 @@ let currentNumberIndex = 0;
 let winnings = 0;
 let jackpotProgress = 0;
 const JACKPOT_GOAL = 2000;
+let countdownInterval;
+let timeLeft = 60;
 
 const colors = ["#ef4444", "#3b82f6", "#10b981", "#f59e0b", "#8b5cf6", "#ec4899", "#6366f1", "#14b8a6", "#f97316", "#06b6d4"];
 
@@ -59,7 +61,6 @@ function savePlayer(player) {
     localStorage.setItem('players', JSON.stringify(players));
     localStorage.setItem('currentPlayer', JSON.stringify(player));
 
-    // Actualizar el conjunto global de códigos usados
     player.usedCodes.forEach(code => globalUsedCodes.add(code));
     localStorage.setItem('globalUsedCodes', JSON.stringify(Array.from(globalUsedCodes)));
 }
@@ -77,7 +78,7 @@ function loginPlayer() {
             player = {
                 id: generatePlayerId(),
                 username: username,
-                credits: 0,
+                balance: 0,
                 usedCodes: []
             };
         }
@@ -90,15 +91,15 @@ function loginPlayer() {
 
 function loadPlayerAndStartGame(player) {
     currentPlayer = player;
-    credits = player.credits;
+    balance = player.balance;
     document.getElementById('authScreen').classList.add('x');
     document.getElementById('gameScreen').classList.remove('x');
     updatePlayerInfo();
-    updateCreditsDisplay();
+    updateBalanceDisplay();
     loadJackpotProgress();
+    startCountdown();
     console.log('Jugador cargado:', player);
 
-    // Cargar códigos usados globalmente
     globalUsedCodes = new Set(JSON.parse(localStorage.getItem('globalUsedCodes')) || []);
 }
 
@@ -106,16 +107,9 @@ function updatePlayerInfo() {
     document.getElementById('playerInfo').textContent = `Jugador: ${currentPlayer.username} (ID: ${currentPlayer.id})`;
 }
 
-function loadCredits() {
+function saveBalance() {
     if (currentPlayer) {
-        credits = currentPlayer.credits;
-        updateCreditsDisplay();
-    }
-}
-
-function saveCredits() {
-    if (currentPlayer) {
-        currentPlayer.credits = credits;
+        currentPlayer.balance = balance;
         savePlayer(currentPlayer);
     }
 }
@@ -132,29 +126,42 @@ function generateNumberGrid() {
 }
 
 function setupEventListeners() {
-    document.querySelectorAll(".b").forEach(button => {
-        button.addEventListener("click", () => switchTab(button.dataset.tab));
-    });
-    document.getElementById("cB").addEventListener("click", showCreditDialog);
-    document.getElementById("loadCreditsBtn").addEventListener("click", showLoadCreditsForm);
-    document.getElementById("loadCreditsCodeBtn").addEventListener("click", showLoadCreditsCodeForm);
-    document.getElementById("withdrawCreditsBtn").addEventListener("click", showWithdrawCreditsForm);
-    document.getElementById("confirmLoadCredits").addEventListener("click", handleLoadCredits);
-    document.getElementById("confirmLoadCreditsCode").addEventListener("click", handleLoadCreditsCode);
-    document.getElementById("confirmWithdraw").addEventListener("click", handleWithdraw);
-    document.getElementById("clB").addEventListener("click", hideCreditDialog);
-    document.getElementById("closeReceipt").addEventListener("click", hideReceiptScreen);
-    document.getElementById("bB").addEventListener("click", buyTicket);
-    document.getElementById("sB").addEventListener("click", startDraw);
-    document.getElementById("tP").addEventListener("change", e => {
-        currentPrice = parseInt(e.target.value, 10);
-    });
-    document.getElementById("loginButton").addEventListener("click", loginPlayer);
-    document.getElementById("logoutButton").addEventListener("click", logoutPlayer);
-    document.getElementById("autoBuy3").addEventListener("click", () => autoBuyTicket(3));
-    document.getElementById("autoBuy4").addEventListener("click", () => autoBuyTicket(4));
-    document.getElementById("autoBuy5").addEventListener("click", () => autoBuyTicket(5));
-    document.getElementById('closeJackpotDialog').addEventListener('click', hideJackpotDialog);
+    const elements = {
+        "cB": showCreditDialog,
+        "loadBalanceBtn": connectToWhatsApp,
+        "loadCreditsBtn": showLoadCreditsForm,
+        "withdrawCreditsBtn": showWithdrawCreditsForm,
+        "confirmLoadCreditsCode": handleLoadCreditsCode,
+        "confirmWithdraw": handleWithdraw,
+        "clB": hideCreditDialog,
+        "closeReceipt": hideReceiptScreen,
+        "loginButton": loginPlayer,
+        "logoutButton": logoutPlayer,
+        "autoBuy3": () => autoBuyTicket(3),
+        "autoBuy4": () => autoBuyTicket(4),
+        "autoBuy5": () => autoBuyTicket(5),
+        "buyTicketBtn": buyTicket,
+        "closeJackpotDialog": hideJackpotDialog
+    };
+
+    for (const [id, handler] of Object.entries(elements)) {
+        const element = document.getElementById(id);
+        if (element) {
+            element.addEventListener("click", handler);
+        } else {
+            console.warn(`Element with id "${id}" not found`);
+        }
+    }
+
+    const tPElement = document.getElementById("tP");
+    if (tPElement) {
+        tPElement.addEventListener("change", e => {
+            currentPrice = parseInt(e.target.value, 10);
+        });
+    } else {
+        console.warn('Element with id "tP" not found');
+    }
+
     console.log('Event listeners configurados');
 }
 
@@ -163,65 +170,26 @@ function logoutPlayer() {
     location.reload();
 }
 
-function switchTab(tabName) {
-    document.querySelectorAll(".b").forEach(btn => btn.classList.remove("a"));
-    document.querySelectorAll(".n").forEach(content => content.classList.add("x"));
-    document.querySelector(`.b[data-tab="${tabName}"]`).classList.add("a");
-    document.getElementById(`${tabName}Tab`).classList.remove("x");
-    if (tabName === "buy" && isInDraw) resetDraw();
-    updateCreditsDisplay();
-}
-
 function showCreditDialog() {
     document.getElementById("cD").classList.add("visible");
-    document.getElementById("loadCreditsForm").classList.add("x");
     document.getElementById("loadCreditsCodeForm").classList.add("x");
     document.getElementById("withdrawCreditsForm").classList.add("x");
 }
 
 function showLoadCreditsForm() {
-    document.getElementById("loadCreditsForm").classList.remove("x");
-    document.getElementById("loadCreditsCodeForm").classList.add("x");
-    document.getElementById("withdrawCreditsForm").classList.add("x");
-}
-
-function showLoadCreditsCodeForm() {
     document.getElementById("loadCreditsCodeForm").classList.remove("x");
-    document.getElementById("loadCreditsForm").classList.add("x");
     document.getElementById("withdrawCreditsForm").classList.add("x");
 }
 
 function showWithdrawCreditsForm() {
     document.getElementById("withdrawCreditsForm").classList.remove("x");
-    document.getElementById("loadCreditsForm").classList.add("x");
     document.getElementById("loadCreditsCodeForm").classList.add("x");
 }
 
 function hideCreditDialog() {
     document.getElementById("cD").classList.remove("visible");
-    document.getElementById("loadPassword").value = "";
-    document.getElementById("loadAmount").value = "";
     document.getElementById("loadCode").value = "";
     document.getElementById("withdrawAmount").value = "";
-}
-
-function handleLoadCredits() {
-    const password = document.getElementById("loadPassword").value;
-    const amount = parseInt(document.getElementById("loadAmount").value);
-
-    if (password === "c27041279") {
-        if (!isNaN(amount) && amount > 0) {
-            credits += amount;
-            updateCreditsDisplay();
-            saveCredits();
-            alert(`Se han cargado ${amount} créditos a tu cuenta.`);
-            hideCreditDialog();
-        } else {
-            alert("Por favor, ingrese un monto válido.");
-        }
-    } else {
-        alert("Contraseña incorrecta. para cargar creditos comunicate al whatsapp +573247159521");
-    }
 }
 
 function handleLoadCreditsCode() {
@@ -229,17 +197,17 @@ function handleLoadCreditsCode() {
 
     if (creditCodes.hasOwnProperty(code) && !globalUsedCodes.has(code)) {
         const amount = creditCodes[code];
-        credits += amount;
+        balance += amount;
         currentPlayer.usedCodes.push(code);
         globalUsedCodes.add(code);
-        updateCreditsDisplay();
-        saveCredits();
-        alert(`Se han cargado ${amount} créditos a tu cuenta.`);
+        updateBalanceDisplay();
+        saveBalance();
+        alert(`Se han cargado ${amount} de saldo a tu cuenta.`);
         hideCreditDialog();
     } else if (globalUsedCodes.has(code)) {
         alert("Este código ya ha sido utilizado por otro jugador.");
     } else {
-        alert("Código inválido. para cargar creditos comunicate al whatsapp +573247159521");
+        alert("Código inválido. Para cargar saldo comunícate al WhatsApp +573247159521");
     }
 }
 
@@ -251,14 +219,14 @@ function handleWithdraw() {
         return;
     }
 
-    if (amount > credits) {
-        alert("No tienes suficientes créditos para realizar este retiro.");
+    if (amount > balance) {
+        alert("No tienes suficiente saldo para realizar este retiro.");
         return;
     }
 
-    credits -= amount;
-    updateCreditsDisplay();
-    saveCredits();
+    balance -= amount;
+    updateBalanceDisplay();
+    saveBalance();
     hideCreditDialog();
     showReceiptScreen(amount);
 }
@@ -283,13 +251,13 @@ function showReceiptScreen(amount) {
     receiptContent.innerHTML = `
         <p><strong>Usuario:</strong> ${currentPlayer.username}</p>
         <p><strong>ID del Jugador:</strong> ${currentPlayer.id}</p>
-        <p><strong>Cantidad  Retirada:</strong> $${amount}</p>
+        <p><strong>Cantidad Retirada:</strong> $${amount}</p>
         <p><strong>Fecha:</strong> ${currentDate.toLocaleDateString()}</p>
         <p><strong>Hora:</strong> ${currentDate.toLocaleTimeString()}</p>
     `;
 
     const withdrawalCode = getNextWithdrawalCode();
-    withdrawalCodeElement.textContent =   `Código de retiro: ${withdrawalCode}`;
+    withdrawalCodeElement.textContent = `Código de retiro: ${withdrawalCode}`;
 
     winningsHistoryList.innerHTML = '';
     const winningsHistory = JSON.parse(localStorage.getItem('winningsHistory')) || [];
@@ -316,9 +284,9 @@ function hideReceiptScreen() {
     }
 }
 
-function updateCreditsDisplay() {
-    const creditButton = document.getElementById("cB");
-    creditButton.innerHTML = `💳 Créditos: $<span id="cA">${credits}</span>`;
+function updateBalanceDisplay() {
+    const balanceButton = document.getElementById("cB");
+    balanceButton.innerHTML = `💰 Saldo: $<span id="cA">${balance}</span>`;
 }
 
 function selectNumber(number) {
@@ -331,27 +299,37 @@ function selectNumber(number) {
         selectedNumbers.push(number);
         button.classList.add("s");
     }
+    updateBuyTicketButtonVisibility();
+}
 
-    document.getElementById("bB").disabled = selectedNumbers.length < 3 || credits < currentPrice;
+function updateBuyTicketButtonVisibility() {
+    const buyTicketButton = document.getElementById("buyTicketBtn");
+    if (buyTicketButton) {
+        buyTicketButton.style.display = (selectedNumbers.length >= 3 && selectedNumbers.length <= 5) ? "block" : "none";
+    }
 }
 
 function autoBuyTicket(numCount) {
-    if (credits >= currentPrice) {
+    if (balance >= currentPrice) {
         selectedNumbers = [];
-        while (selectedNumbers.length < numCount) {
+        while (selectedNumbers.length < numCount)   {
             const randomNumber = Math.floor(Math.random() * 80) + 1;
             if (!selectedNumbers.includes(randomNumber)) {
                 selectedNumbers.push(randomNumber);
+                const button = document.querySelector(`.g button:nth-child(${randomNumber})`);
+                if (button) {
+                    button.classList.add("s");
+                }
             }
         }
         buyTicket();
     } else {
-        alert("No tienes suficientes créditos para comprar un ticket.");
+        alert("No tienes suficiente saldo para comprar un ticket.");
     }
 }
 
 function buyTicket() {
-    if (selectedNumbers.length >= 3 && selectedNumbers.length <= 5 && credits >= currentPrice) {
+    if (selectedNumbers.length >= 3 && selectedNumbers.length <= 5 && balance >= currentPrice) {
         const newTicket = {
             id: Date.now(),
             numbers: [...selectedNumbers],
@@ -359,14 +337,14 @@ function buyTicket() {
             matches: 0
         };
         tickets.push(newTicket);
-        credits -= currentPrice;
+        balance -= currentPrice;
         updateJackpotProgress(currentPrice);
-        updateCreditsDisplay();
-        saveCredits();
+        updateBalanceDisplay();
+        saveBalance();
         renderTickets();
         resetSelection();
     } else {
-        alert("Por favor, selecciona entre 3 y 5 números y asegúrate de tener suficientes créditos.");
+        alert("Por favor, selecciona entre 3 y 5 números y asegúrate de tener suficiente saldo.");
     }
 }
 
@@ -396,26 +374,46 @@ function createTicketElement(ticket, inDrawScreen = false) {
 function resetSelection() {
     selectedNumbers = [];
     document.querySelectorAll(".g button").forEach(button => button.classList.remove("s"));
-    document.getElementById("bB").disabled = true;
+    updateBuyTicketButtonVisibility();
+}
+
+function startCountdown() {
+    timeLeft = 60;
+    const countdownElement = document.getElementById('countdown');
+    const countdownTimerElement = document.getElementById('countdownTimer');
+    
+    countdownTimerElement.classList.remove('x');
+    
+    clearInterval(countdownInterval);
+    
+    countdownInterval = setInterval(() => {
+        countdownElement.textContent = timeLeft;
+        timeLeft--;
+        
+        if (timeLeft < 0) {
+            clearInterval(countdownInterval);
+            countdownTimerElement.classList.add('x');
+            startDraw();
+        }
+    }, 1000);
 }
 
 function startDraw() {
-    if (tickets.length) {
-        isInDraw = true;
-        drawnNumbers = [];
-        currentNumberIndex = 0;
-        winnings = 0;
-        const availableNumbers = Array.from({length: 80}, (_, i) => i + 1);
-        for (let i = 0; i < 21; i++) {
-            const randomIndex = Math.floor(Math.random() * availableNumbers.length);
-            const drawnNumber = availableNumbers[randomIndex];
-            drawnNumbers.push(drawnNumber);
-            availableNumbers.splice(randomIndex, 1);
-        }
-        document.getElementById("sB").classList.add("x");
-        document.getElementById("dR").classList.remove("x");
-        drawNextNumber();
+    isInDraw = true;
+    drawnNumbers = [];
+    currentNumberIndex = 0;
+    winnings = 0;
+    const availableNumbers = Array.from({length: 80}, (_, i) => i + 1);
+    for (let i = 0; i < 21; i++) {
+        const randomIndex = Math.floor(Math.random() * availableNumbers.length);
+        const drawnNumber = availableNumbers[randomIndex];
+        drawnNumbers.push(drawnNumber);
+        availableNumbers.splice(randomIndex, 1);
     }
+    document.getElementById("buyTab").classList.add("x");
+    document.getElementById("drawTab").classList.remove("x");
+    document.getElementById("dR").classList.remove("x");
+    drawNextNumber();
 }
 
 function drawNextNumber() {
@@ -425,9 +423,15 @@ function drawNextNumber() {
         updateTicketMatches();
         renderTicketsInDraw();
         currentNumberIndex++;
-        setTimeout(drawNextNumber, 1000);
+        setTimeout(drawNextNumber, 1500);
     } else {
         calculateWinnings();
+        setTimeout(() => {
+            document.getElementById("buyTab").classList.remove("x");
+            document.getElementById("drawTab").classList.add("x");
+            resetDraw();
+            startCountdown();
+        }, 3000);
     }
 }
 
@@ -483,9 +487,9 @@ function calculateWinnings() {
     if (winnings > 0) {
         addWinningToHistory(winnings);
     }
-    credits += winnings;
-    updateCreditsDisplay();
-    saveCredits();
+    balance += winnings;
+    updateBalanceDisplay();
+    saveBalance();
     document.getElementById("wI").classList.remove("x");
     document.getElementById("wI").textContent = winnings > 0
         ? `¡Felicidades! Ganaste $${winnings}`
@@ -498,11 +502,10 @@ function resetDraw() {
     drawnNumbers = [];
     currentNumberIndex = 0;
     winnings = 0;
-    document.getElementById("sB").classList.remove("x");
     document.getElementById("dR").classList.add("x");
     document.getElementById("wI").classList.add("x");
     renderTickets();
-    updateCreditsDisplay();
+    updateBalanceDisplay();
 }
 
 function loadJackpotProgress() {
@@ -555,6 +558,10 @@ function hideJackpotDialog() {
     dialog.classList.remove('visible');
 }
 
+function connectToWhatsApp() {
+    window.open('https://wa.me/573247159521', '_blank');
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     generateNumberGrid();
     setupEventListeners();
@@ -572,3 +579,33 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById('gameScreen').classList.add('x');
     }
 });
+// Añadir al principio del archivo JavaScript existente
+function updatePlayerCount() {
+    const now = new Date();
+    const hour = now.getHours();
+    
+    // Definir rangos de actividad
+    const lowActivity = 300;
+    const highActivity = 999;
+    const peakHours = [10, 11, 12, 13, 14, 19, 20, 21, 22]; // Horas de mayor actividad
+    
+    let baseCount;
+    if (peakHours.includes(hour)) {
+        baseCount = Math.floor(Math.random() * (highActivity - lowActivity + 1)) + lowActivity;
+    } else {
+        baseCount = Math.floor(Math.random() * (700 - lowActivity + 1)) + lowActivity;
+    }
+    
+    // Añadir variación aleatoria
+    const variation = Math.floor(Math.random() * 21) - 10; // -10 a +10
+    let playerCount = baseCount + variation;
+    
+    // Asegurar que el conteo esté dentro del rango permitido
+    playerCount = Math.max(lowActivity, Math.min(highActivity, playerCount));
+    
+    document.getElementById('playerCount').textContent = playerCount;
+}
+
+// Actualizar el conteo cada 30 segundos
+setInterval(updatePlayerCount, 30000);
+

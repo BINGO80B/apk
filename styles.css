@@ -73,7 +73,7 @@ h1, h2 {
 
 .g {
     display: grid;
-    grid-template-columns: repeat(8, 1fr);
+    grid-template-columns: repeat(10, 1fr);
     gap: 5px;
     margin-bottom: 20px;
 }
@@ -81,6 +81,7 @@ h1, h2 {
 .g button {
     width: 100%;
     aspect-ratio: 1;
+    font-size: 16px;
 }
 
 .o {
@@ -235,49 +236,13 @@ button:disabled {
     cursor: pointer;
 }
 
-.admin-panel {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: #e6f7e6;
-    padding: 20px;
-    border-radius: 8px;
-    max-width: 80%;
-    max-height: 80%;
-    overflow-y: auto;
-    z-index: 1000;
-}
-
-.admin-panel h2 {
-    color: #1f2937;
-    margin-bottom: 20px;
-}
-
-.admin-panel div {
-    margin-bottom: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.admin-panel input {
-    width: 60px;
-    margin-right: 5px;
-}
-
-.admin-panel button {
-    padding: 5px 10px;
-    margin-left: 5px;
-}
-
 #loadCreditsBtn, #withdrawCreditsBtn {
     background: #fbbf24;
     color: #1f2937;
     margin-bottom: 10px;
 }
 
-#confirmLoadCredits, #confirmWithdraw {
+#confirmLoadCreditsCode, #confirmWithdraw {
     background: #fbbf24;
     color: #1f2937;
 }
@@ -286,11 +251,11 @@ button:disabled {
     background: #ef4444;
 }
 
-#loadCreditsForm, #withdrawCreditsForm {
+#loadCreditsCodeForm, #withdrawCreditsForm {
     margin-top: 10px;
 }
 
-#loadPassword, #loadCode, #withdrawAmount {
+#loadCode, #withdrawAmount {
     background: #4b5563;
     color: #fff;
 }
@@ -314,48 +279,6 @@ button:disabled {
 #closeReceipt {
     background: #fbbf24;
     color: #1f2937;
-}
-
-.ticket {
-    background-color: rgba(248, 249, 250, 0.7);
-    border: 1px solid #dee2e6;
-    border-radius: .25rem;
-    padding: .5rem;
-    cursor: pointer;
-    margin-bottom: 10px;
-    transition: background-color 0.3s ease;
-}
-
-.ticket.selected {
-    background-color: rgba(204, 229, 255, 0.7);
-}
-
-.ticket table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.ticket td {
-    border: 1px solid #dee2e6;
-    text-align: center;
-    padding: 5px;
-    font-size: 14px;
-    width: 11.11%;
-    height: 30px;
-}
-
-.ticket td:empty {
-    background-color: rgba(240, 240, 240, 0.3);
-}
-
-.in-draw .ticket-id {
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-
-.in-draw td.matched {
-    background-color: rgba(144, 238, 144, 0.7);
-    border-radius: 50%;
 }
 
 #jackpotContainer {
@@ -474,7 +397,7 @@ button:disabled {
     outline-offset: 2px;
 }
 
-#bB {
+#buyTicketBtn {
     margin-top: 10px;
     background-color: #fbbf24;
     color: #1f2937;
@@ -484,21 +407,122 @@ button:disabled {
     border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    width: 100%;
 }
 
-#bB:hover {
+#buyTicketBtn:hover {
     background-color: #f59e0b;
 }
 
-#bB:disabled {
+#buyTicketBtn:disabled {
     background-color: #cbd5e0;
     cursor: not-allowed;
 }
 
+#countdownTimer {
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #fbbf24; /* Cambiado a amarillo */
+}
+
+.top-controls {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+#cB, #loadBalanceBtn {
+    flex: 1;
+    margin: 0 5px;
+    background-color: #fbbf24; /* Cambiado a amarillo */
+    color: #1f2937;
+}
+
 @media (max-width: 600px) {
-    .ticket td {
-        font-size: 12px;
-        padding: 3px;
-        height: 25px;
+    .g {
+        grid-template-columns: repeat(8, 1fr);
+    }
+
+    .g button {
+        font-size: 14px;
+    }
+
+    .cat-button {
+        font-size: 0.7rem;
+        padding: 4px 8px;
     }
 }
+/* Añadir al principio del archivo CSS existente */
+.player-counter {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: rgba(251, 191, 36, 0.8); /* Amarillo semi-transparente */
+    color: #1f2937;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 14px;
+    font-weight: bold;
+    z-index: 1000;
+}
+
+/* Resto del CSS sin cambios */
+body {
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-image: url('https://www.lavanguardia.com/andro4all/hero/2022/08/Las-mejores-aplicaciones-para-jugar-al-bingo.jpg?width=1200&aspect_ratio=16:9');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    color: #fff;
+}
+
+/* ... (resto del CSS sin cambios) */
+/* Añadir al principio del archivo CSS existente */
+.user-info-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.player-counter {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    font-weight: bold;
+    color: #1f2937;
+}
+
+.online-dot {
+    width: 8px;
+    height: 8px;
+    background-color: #10b981;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+
+/* Resto del CSS sin cambios */
+body {
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-image: url('https://www.lavanguardia.com/andro4all/hero/2022/08/Las-mejores-aplicaciones-para-jugar-al-bingo.jpg?width=1200&aspect_ratio=16:9');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    color: #fff;
+}
+
+/* ... (resto del CSS sin cambios) */
