@@ -12,6 +12,9 @@ let jackpotProgress = 0;
 const JACKPOT_GOAL = 2000;
 let countdownInterval;
 let timeLeft = 60;
+let globalUsedCodes = new Set();
+let currentWithdrawalCodeIndex = 0;
+let jackpotCodeIndex = 0;
 
 const colors = ["#ef4444", "#3b82f6", "#10b981", "#f59e0b", "#8b5cf6", "#ec4899", "#6366f1", "#14b8a6", "#f97316", "#06b6d4"];
 
@@ -37,19 +40,14 @@ const creditCodes = {
     "hSlmDdYV": 5000, "tAqDRQef": 5000, "tBjusacC": 5000, "tC3R3mHa": 5000, "teiEASjG": 5000
 };
 
-// Conjunto global para almacenar todos los códigos usados
-let globalUsedCodes = new Set();
-
 // Códigos de retiro predefinidos
 const withdrawalCodes = ['uiToAkkJ', 'uwG50Fe7', 'v1Jhj0da', 'vUf35J5O', 'w1VWsoyW', 'xNag9TLI', 'xQT1yD9A', 'yMTmlthi', 'yhNh4ocj', 'zwBUZKP2'];
-let currentWithdrawalCodeIndex = 0;
 
 // Códigos del jackpot actualizados
 const jackpotCodes = [
     "4464", "1869", "6439", "1267", "2862", "2032", "9030", "6310", "6376", "2444",
     "3813", "3960", "7677", "2799", "1712", "4885", "5631", "1678", "9669", "9685"
 ];
-let jackpotCodeIndex = 0;
 
 function generatePlayerId() {
     return Math.floor(10000 + Math.random() * 90000).toString();
@@ -128,7 +126,7 @@ function generateNumberGrid() {
 function setupEventListeners() {
     const elements = {
         "cB": showCreditDialog,
-        "loadBalanceBtn": connectToWhatsApp,
+        "loadBalanceBtn": showLoadBalanceMessage,
         "loadCreditsBtn": showLoadCreditsForm,
         "withdrawCreditsBtn": showWithdrawCreditsForm,
         "confirmLoadCreditsCode": handleLoadCreditsCode,
@@ -141,7 +139,8 @@ function setupEventListeners() {
         "autoBuy4": () => autoBuyTicket(4),
         "autoBuy5": () => autoBuyTicket(5),
         "buyTicketBtn": buyTicket,
-        "closeJackpotDialog": hideJackpotDialog
+        "closeJackpotDialog": hideJackpotDialog,
+        "closeLoadBalanceMessage": hideLoadBalanceMessage
     };
 
     for (const [id, handler] of Object.entries(elements)) {
@@ -312,7 +311,7 @@ function updateBuyTicketButtonVisibility() {
 function autoBuyTicket(numCount) {
     if (balance >= currentPrice) {
         selectedNumbers = [];
-        while (selectedNumbers.length < numCount)   {
+        while (selectedNumbers.length < numCount) {
             const randomNumber = Math.floor(Math.random() * 80) + 1;
             if (!selectedNumbers.includes(randomNumber)) {
                 selectedNumbers.push(randomNumber);
@@ -558,13 +557,41 @@ function hideJackpotDialog() {
     dialog.classList.remove('visible');
 }
 
-function connectToWhatsApp() {
-    window.open('https://wa.me/qr/FMCXPXIEOSGRL1', '_blank');
+function showLoadBalanceMessage() {
+    document.getElementById('loadBalanceMessage').classList.add('visible');
+}
+
+function hideLoadBalanceMessage() {
+    document.getElementById('loadBalanceMessage').classList.remove('visible');
+}
+
+function updatePlayerCount() {
+    const now = new Date();
+    const hour = now.getHours();
+    
+    const lowActivity = 300;
+    const highActivity = 999;
+    const peakHours = [10, 11, 12, 13, 14, 19, 20, 21, 22];
+    
+    let baseCount;
+    if (peakHours.includes(hour)) {
+        baseCount = Math.floor(Math.random() * (highActivity - lowActivity + 1)) + lowActivity;
+    } else {
+        baseCount = Math.floor(Math.random() * (700 - lowActivity + 1)) + lowActivity;
+    }
+    
+    const variation = Math.floor(Math.random() * 21) - 10;
+    let playerCount = baseCount + variation;
+    
+    playerCount = Math.max(lowActivity, Math.min(highActivity, playerCount));
+    
+    document.getElementById('playerCount').textContent = playerCount;
 }
 
 document.addEventListener("DOMContentLoaded", () => {
     generateNumberGrid();
     setupEventListeners();
+    updatePlayerCount();
 
     globalUsedCodes = new Set(JSON.parse(localStorage.getItem('globalUsedCodes')) || []);
 
@@ -579,33 +606,5 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById('gameScreen').classList.add('x');
     }
 });
-// Añadir al principio del archivo JavaScript existente
-function updatePlayerCount() {
-    const now = new Date();
-    const hour = now.getHours();
-    
-    // Definir rangos de actividad
-    const lowActivity = 300;
-    const highActivity = 999;
-    const peakHours = [10, 11, 12, 13, 14, 19, 20, 21, 22]; // Horas de mayor actividad
-    
-    let baseCount;
-    if (peakHours.includes(hour)) {
-        baseCount = Math.floor(Math.random() * (highActivity - lowActivity + 1)) + lowActivity;
-    } else {
-        baseCount = Math.floor(Math.random() * (700 - lowActivity + 1)) + lowActivity;
-    }
-    
-    // Añadir variación aleatoria
-    const variation = Math.floor(Math.random() * 21) - 10; // -10 a +10
-    let playerCount = baseCount + variation;
-    
-    // Asegurar que el conteo esté dentro del rango permitido
-    playerCount = Math.max(lowActivity, Math.min(highActivity, playerCount));
-    
-    document.getElementById('playerCount').textContent = playerCount;
-}
 
-// Actualizar el conteo cada 10 segundos
 setInterval(updatePlayerCount, 10000);
-
