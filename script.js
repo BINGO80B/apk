@@ -15,6 +15,9 @@ let timeLeft = 60;
 let globalUsedCodes = new Set();
 let currentWithdrawalCodeIndex = 0;
 let jackpotCodeIndex = 0;
+let touchStartY = 0;
+let touchEndY = 0;
+const touchThreshold = 10; // pixels
 
 const colors = ["#ef4444", "#3b82f6", "#10b981", "#f59e0b", "#8b5cf6", "#ec4899", "#6366f1", "#14b8a6", "#f97316", "#06b6d4"];
 
@@ -118,9 +121,36 @@ function generateNumberGrid() {
     for (let i = 1; i <= 80; i++) {
         const button = document.createElement("button");
         button.textContent = i;
-        button.addEventListener("click", () => selectNumber(i));
+        button.addEventListener("click", (e) => handleNumberInteraction(e, i));
+        button.addEventListener("touchstart", handleTouchStart);
+        button.addEventListener("touchend", (e) => handleTouchEnd(e, i));
         grid.appendChild(button);
     }
+}
+
+function handleTouchStart(e) {
+    touchStartY = e.touches[0].clientY;
+}
+
+function handleTouchEnd(e, number) {
+    touchEndY = e.changedTouches[0].clientY;
+    if (Math.abs(touchEndY - touchStartY) < touchThreshold) {
+        handleNumberInteraction(e, number);
+    }
+}
+
+function handleNumberInteraction(e, number) {
+    e.preventDefault();
+    const button = e.target;
+    const index = selectedNumbers.indexOf(number);
+    if (index > -1) {
+        selectedNumbers.splice(index, 1);
+        button.classList.remove("s");
+    } else if (selectedNumbers.length < 5) {
+        selectedNumbers.push(number);
+        button.classList.add("s");
+    }
+    updateBuyTicketButtonVisibility();
 }
 
 function setupEventListeners() {
@@ -289,16 +319,8 @@ function updateBalanceDisplay() {
 }
 
 function selectNumber(number) {
-    const index = selectedNumbers.indexOf(number);
     const button = document.querySelector(`.g button:nth-child(${number})`);
-    if (index > -1) {
-        selectedNumbers.splice(index, 1);
-        button.classList.remove("s");
-    } else if (selectedNumbers.length < 5) {
-        selectedNumbers.push(number);
-        button.classList.add("s");
-    }
-    updateBuyTicketButtonVisibility();
+    handleNumberInteraction({ target: button, preventDefault: () => {} }, number);
 }
 
 function updateBuyTicketButtonVisibility() {

@@ -79,6 +79,10 @@ h1, h2 {
     border-radius: 50%;
     background: #fff;
     border: 2px solid #fbbf24;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .g button:hover, .cat-button:hover, #buyTicketBtn:hover, #closeJackpotDialog:hover, #closeLoadBalanceMessage:hover {
@@ -550,16 +554,43 @@ button:disabled {
 }
 
 @media (max-width: 600px) {
+    .c {
+        padding: 10px;
+    }
+
+    .d {
+        padding: 10px;
+    }
+
     .g {
         grid-template-columns: repeat(8, 1fr);
+        gap: 3px;
     }
 
     .g button {
         font-size: 14px;
     }
 
-    .cat-button {
-        font-size: 0.7rem;
-        padding: 4px 8px;
+    .cat-button, #buyTicketBtn {
+        font-size: 0.8rem;
+        padding: 8px;
+    }
+}
+
+@media (max-width: 400px) {
+    .g {
+        grid-template-columns: repeat(5, 1fr);
+        gap: 2px;
+    }
+
+    .g button {
+        font-size: 12px;
+    }
+}
+
+@media (hover: none) and (pointer: coarse) {
+    .g button {
+        min-width: 44px;
+        min-height: 44px;
     }
 }
