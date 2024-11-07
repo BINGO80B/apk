@@ -83,10 +83,7 @@ h1, h2 {
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-.g button:hover, .cat-button:hover, #buyTicketBtn:hover, #closeJackpotDialog:hover, #closeLoadBalanceMessage:hover {
-    background-color: #f59e0b;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .g button.s {
