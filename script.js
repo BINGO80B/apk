@@ -315,7 +315,7 @@ function hideReceiptScreen() {
 
 function updateBalanceDisplay() {
     const balanceButton = document.getElementById("cB");
-    balanceButton.innerHTML = `💰 Saldo $<span id="cA">${balance}</span>`;
+    balanceButton.innerHTML = `💰 𝐒𝐀𝐋𝐃𝐎 $<span id="cA">${balance}</span>`;
 }
 
 function selectNumber(number) {
